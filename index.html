@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create beautiful content calendars with Tempest Labs' intuitive planning tool">
+    <meta name="keywords" content="content calendar, social media planner, marketing schedule">
+    <meta name="author" content="Tempest Labs">
+    <meta property="og:title" content="Tempest Content Calendar | Plan Your Social Media Strategy">
+    <meta property="og:description" content="Create, organize, and schedule your social media content with our intuitive calendar">
+    <meta property="og:url" content="https://tempestlabs.space">
+    <meta property="og:type" content="website">
+    <title>Tempest Content Calendar | Plan Your Social Media Strategy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --teal: #2ec4b6;
+            --light-blue: #caf0f8;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4ade80;
+            --warning: #facc15;
+            --danger: #f87171;
+            --card-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --border: #e2e8f0;
+            --patch-light: #e6f7ff;
+            --patch-medium: #b3e5fc;
+            --patch-dark: #81d4fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f4f8, #e6f7ff);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Artistic background elements */
+        .art-bg {
+            position: fixed;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        .bg-patch-1 {
+            top: 10%;
+            left: 5%;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--patch-light), var(--patch-medium));
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            transform: rotate(25deg);
+        }
+
+        .bg-patch-2 {
+            bottom: 15%;
+            right: 8%;
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, var(--accent), var(--teal));
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            transform: rotate(-15deg);
+        }
+
+        .bg-patch-3 {
+            top: 40%;
+            right: 20%;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--patch-medium), var(--patch-dark));
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            transform: rotate(45deg);
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 15px 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--secondary);
+            font-family: 'Playfair Display', serif;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            color: var(--primary);
+            position: relative;
+        }
+
+        .logo-text span:after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            border-radius: 2px;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--dark);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-teal {
+            background: linear-gradient(135deg, var(--teal), var(--accent));
+            color: white;
+        }
+
+        .btn-teal:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(46, 196, 182, 0.4);
+        }
+
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 25px;
+            padding: 50px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section:before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(46, 196, 182, 0.15));
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            transform: rotate(45deg);
+            z-index: -1;
+        }
+
+        .welcome-section:after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            right: -40px;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(63, 55, 201, 0.15));
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            transform: rotate(-20deg);
+            z-index: -1;
+        }
+
+        .welcome-section h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .welcome-section p {
+            font-size: 18px;
+            color: #64748b;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.8;
+        }
+
+        .user-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+            position: relative;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 15px;
+            padding-left: 10px;
+        }
+
+        .form-group input {
+            padding: 16px 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(226, 232, 240, 0.7);
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.15);
+            background: white;
+        }
+
+        .calendar-section {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            display: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .month-navigation {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .current-month {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--secondary);
+            min-width: 240px;
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(76, 201, 240, 0.1));
+            padding: 10px 20px;
+            border-radius: 16px;
+        }
+
+        .calendar-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .weeks-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            padding-bottom: 20px;
+        }
+
+        .week-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.9));
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .week-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .week-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--teal));
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .week-title {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .week-title i {
+            color: var(--accent);
+            font-size: 22px;
+        }
+
+        .week-dates {
+            font-size: 15px;
+            color: #64748b;
+            background: rgba(226, 232, 240, 0.4);
+            padding: 6px 12px;
+            border-radius: 30px;
+        }
+
+        .content-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-height: 120px;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .content-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-platform {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 14px;
+            background: rgba(67, 97, 238, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            align-self: flex-start;
+        }
+
+        .card-theme {
+            font-weight: 700;
+            color: var(--secondary);
+            font-size: 16px;
+        }
+
+        .card-details {
+            font-size: 14px;
+            color: #64748b;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .week-view-section {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            display: none;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .week-view-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .week-view-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--secondary);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .week-view-dates {
+            font-size: 18px;
+            color: #64748b;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(76, 201, 240, 0.1));
+            padding: 8px 16px;
+            border-radius: 16px;
+        }
+
+        .days-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .day-column {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .day-title {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--secondary);
+        }
+
+        .day-date {
+            font-size: 15px;
+            color: #64748b;
+            background: rgba(226, 232, 240, 0.4);
+            padding: 6px 12px;
+            border-radius: 30px;
+        }
+
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .content-table th {
+            text-align: left;
+            padding: 12px 10px;
+            background: rgba(67, 97, 238, 0.05);
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+        }
+
+        .content-table td {
+            padding: 14px 10px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .content-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .content-table tr:hover td {
+            background: rgba(76, 201, 240, 0.03);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            background: rgba(226, 232, 240, 0.5);
+        }
+
+        .tag-content-type {
+            background: rgba(76, 201, 240, 0.15);
+            color: #0e7490;
+        }
+
+        .tag-platform {
+            background: rgba(67, 97, 238, 0.15);
+            color: #3730a3;
+        }
+
+        .tag-funnel {
+            background: rgba(46, 196, 182, 0.15);
+            color: #0d9488;
+        }
+
+        .week-view-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #64748b;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-logo {
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--secondary);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-col label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark);
+        }
+
+        .form-col select, 
+        .form-col input, 
+        .form-col textarea {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .form-col select:focus, 
+        .form-col input:focus, 
+        .form-col textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        .form-col textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1001;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            font-size: 20px;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1002;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .spinner.active {
+            display: flex;
+        }
+
+        .spinner-circle {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(67, 97, 238, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .days-container {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 15px;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .welcome-section {
+                padding: 30px 20px;
+            }
+            
+            .welcome-section h1 {
+                font-size: 32px;
+            }
+            
+            .calendar-section, .week-view-section {
+                padding: 20px 15px;
+            }
+            
+            .calendar-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .month-navigation {
+                margin-bottom: 15px;
+            }
+            
+            .current-month {
+                font-size: 22px;
+            }
+            
+            .weeks-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .week-view-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .app-container {
+                max-width: 100%;
+                padding: 10px;
+            }
+            
+            header, .calendar-header, .week-view-actions, footer {
+                display: none;
+            }
+            
+            .calendar-section, .week-view-section {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .week-card, .day-column {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                page-break-inside: avoid;
+            }
+
+            .art-bg {
+                display: none;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="art-bg bg-patch-1"></div>
+    <div class="art-bg bg-patch-2"></div>
+    <div class="art-bg bg-patch-3"></div>
+    
+    <!-- Loading Spinner -->
+    <div class="spinner" id="spinner">
+        <div class="spinner-circle"></div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Success!</span>
+    </div>
+
+    <!-- Add Content Modal -->
+    <div class="modal" id="contentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Content</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="contentForm">
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="contentTheme">Content Theme</label>
+                        <input type="text" id="contentTheme" placeholder="e.g. Product Launch" required>
+                    </div>
+                    <div class="form-col">
+                        <label for="contentDate">Date</label>
+                        <input type="date" id="contentDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="contentType">Content Type</label>
+                        <select id="contentType" required>
+                            <option value="">Select type</option>
+                            <option value="Blog Post">Blog Post</option>
+                            <option value="Video">Video</option>
+                            <option value="Infographic">Infographic</option>
+                            <option value="Podcast">Podcast</option>
+                            <option value="Story">Story</option>
+                            <option value="Reel">Reel</option>
+                            <option value="Live Stream">Live Stream</option>
+                            <option value="Interview">Interview</option>
+                            <option value="Case Study">Case Study</option>
+                            <option value="Tutorial">Tutorial</option>
+                            <option value="Q&A">Q&A</option>
+                            <option value="User Generated">User Generated</option>
+                            <option value="Behind the Scenes">Behind the Scenes</option>
+                            <option value="Product Demo">Product Demo</option>
+                            <option value="Webinar">Webinar</option>
+                            <option value="Event">Event</option>
+                        </select>
+                    </div>
+                    <div class="form-col">
+                        <label for="contentPlatform">Platform</label>
+                        <select id="contentPlatform" required>
+                            <option value="">Select platform</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Twitter">Twitter</option>
+                            <option value="LinkedIn">LinkedIn</option>
+                            <option value="Pinterest">Pinterest</option>
+                            <option value="TikTok">TikTok</option>
+                            <option value="YouTube">YouTube</option>
+                            <option value="Snapchat">Snapchat</option>
+                            <option value="Reddit">Reddit</option>
+                            <option value="Clubhouse">Clubhouse</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Newsletter">Newsletter</option>
+                            <option value="Website">Website</option>
+                            <option value="Blog">Blog</option>
+                            <option value="Podcast Platform">Podcast Platform</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="contentFormat">Format</label>
+                        <select id="contentFormat" required>
+                            <option value="">Select format</option>
+                            <option value="Image">Image</option>
+                            <option value="Video">Video</option>
+                            <option value="Carousel">Carousel</option>
+                            <option value="Text">Text</option>
+                            <option value="Poll">Poll</option>
+                            <option value="Quiz">Quiz</option>
+                            <option value="Story">Story</option>
+                            <option value="Live">Live</option>
+                            <option value="Reel">Reel</option>
+                            <option value="Guide">Guide</option>
+                            <option value="Collection">Collection</option>
+                            <option value="Event">Event</option>
+                            <option value="Offer">Offer</option>
+                            <option value="Product">Product</option>
+                            <option value="Mention">Mention</option>
+                            <option value="Repost">Repost</option>
+                        </select>
+                    </div>
+                    <div class="form-col">
+                        <label for="contentTime">Time</label>
+                        <input type="time" id="contentTime" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="funnelType">Funnel Stage</label>
+                        <select id="funnelType" required>
+                            <option value="">Select stage</option>
+                            <option value="Awareness">Awareness</option>
+                            <option value="Consideration">Consideration</option>
+                            <option value="Conversion">Conversion</option>
+                            <option value="Retention">Retention</option>
+                            <option value="Advocacy">Advocacy</option>
+                            <option value="Top of Funnel">Top of Funnel</option>
+                            <option value="Middle of Funnel">Middle of Funnel</option>
+                            <option value="Bottom of Funnel">Bottom of Funnel</option>
+                            <option value="Lead Generation">Lead Generation</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Engagement">Engagement</option>
+                            <option value="Brand Building">Brand Building</option>
+                            <option value="Community Building">Community Building</option>
+                            <option value="Education">Education</option>
+                        </select>
+                    </div>
+                    <div class="form-col">
+                        <label for="contentStatus">Status</label>
+                        <select id="contentStatus">
+                            <option value="Planned">Planned</option>
+                            <option value="Draft">Draft</option>
+                            <option value="Ready">Ready</option>
+                            <option value="Published">Published</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="contentCaption">Caption/Details</label>
+                        <textarea id="contentCaption" placeholder="Enter content details or caption..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelContentBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Content</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="logo-text">Tempest <span>Calendar</span></div>
+            </div>
+            <div class="user-actions">
+                <button class="btn btn-secondary" id="printBtn">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <button class="btn btn-teal" id="saveBtn">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button class="btn btn-primary" id="newPlanBtn">
+                    <i class="fas fa-plus"></i> New Plan
+                </button>
+            </div>
+        </header>
+
+        <section class="welcome-section" id="welcomeSection">
+            <h1>Plan Your Content Like a Pro</h1>
+            <p>Create, organize, and schedule your social media content with our intuitive calendar. Click on any week to see detailed daily plans and export beautiful schedules to share with your team.</p>
+            
+            <div class="user-form">
+                <div class="form-group">
+                    <label for="userName">Your Name</label>
+                    <input type="text" id="userName" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Your Email</label>
+                    <input type="email" id="userEmail" placeholder="Enter your email" required>
+                </div>
+                <button class="btn btn-primary" id="startPlanningBtn">
+                    Start Planning <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <section class="calendar-section" id="calendarSection">
+            <div class="calendar-header">
+                <div class="month-navigation">
+                    <button class="btn btn-secondary" id="prevMonthBtn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="current-month" id="currentMonth">March 2023</div>
+                    <button class="btn btn-secondary" id="nextMonthBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="calendar-controls">
+                    <button class="btn btn-secondary" id="todayBtn">
+                        <i class="fas fa-calendar-day"></i> Today
+                    </button>
+                    <button class="btn btn-teal" id="addContentBtn">
+                        <i class="fas fa-plus-circle"></i> Add Content
+                    </button>
+                </div>
+            </div>
+            
+            <div class="weeks-container" id="weeksContainer">
+                <!-- Weeks will be generated dynamically -->
+            </div>
+        </section>
+
+        <section class="week-view-section" id="weekViewSection">
+            <div class="week-view-header">
+                <div>
+                    <div class="week-view-title">Weekly Content Plan</div>
+                    <div class="week-view-dates" id="weekViewDates">March 13 - March 19, 2023</div>
+                </div>
+                <button class="btn btn-secondary" id="backToCalendarBtn">
+                    <i class="fas fa-arrow-left"></i> Back to Calendar
+                </button>
+            </div>
+            
+            <div class="days-container" id="daysContainer">
+                <!-- Days will be generated dynamically -->
+            </div>
+            
+            <div class="week-view-actions">
+                <button class="btn btn-secondary" id="exportPdfBtn">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </button>
+                <button class="btn btn-secondary" id="exportPngBtn">
+                    <i class="fas fa-image"></i> Export PNG
+                </button>
+                <button class="btn btn-primary" id="printWeekBtn">
+                    <i class="fas fa-print"></i> Print Week
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2023 <span class="footer-logo">Tempest Calendar</span> - A Product of <a href="https://tempestlabs.space" target="_blank">Tempest Labs</a></p>
+        <p>Transform your content planning process with our intuitive tools</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        // DOM Elements
+        const welcomeSection = document.getElementById('welcomeSection');
+        const calendarSection = document.getElementById('calendarSection');
+        const weekViewSection = document.getElementById('weekViewSection');
+        const startPlanningBtn = document.getElementById('startPlanningBtn');
+        const printBtn = document.getElementById('printBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const newPlanBtn = document.getElementById('newPlanBtn');
+        const backToCalendarBtn = document.getElementById('backToCalendarBtn');
+        const prevMonthBtn = document.getElementById('prevMonthBtn');
+        const nextMonthBtn = document.getElementById('nextMonthBtn');
+        const todayBtn = document.getElementById('todayBtn');
+        const addContentBtn = document.getElementById('addContentBtn');
+        const currentMonthEl = document.getElementById('currentMonth');
+        const weeksContainer = document.getElementById('weeksContainer');
+        const daysContainer = document.getElementById('daysContainer');
+        const weekViewDates = document.getElementById('weekViewDates');
+        const userNameInput = document.getElementById('userName');
+        const userEmailInput = document.getElementById('userEmail');
+        const exportPdfBtn = document.getElementById('exportPdfBtn');
+        const exportPngBtn = document.getElementById('exportPngBtn');
+        const printWeekBtn = document.getElementById('printWeekBtn');
+        const contentModal = document.getElementById('contentModal');
+        const closeModal = document.getElementById('closeModal');
+        const cancelContentBtn = document.getElementById('cancelContentBtn');
+        const contentForm = document.getElementById('contentForm');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const spinner = document.getElementById('spinner');
+
+        // App State
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        let userData = {
+            name: '',
+            email: ''
+        };
+        let selectedWeek = null;
+        let contentItems = [];
+        
+        // Initialize App
+        function initApp() {
+            // Check if user data exists in localStorage
+            const savedUser = localStorage.getItem('contentCalendarUser');
+            if (savedUser) {
+                userData = JSON.parse(savedUser);
+                userNameInput.value = userData.name;
+                userEmailInput.value = userData.email;
+                startPlanning();
+            }
+            
+            // Load content items from localStorage
+            const savedContent = localStorage.getItem('contentCalendarData');
+            if (savedContent) {
+                contentItems = JSON.parse(savedContent);
+                // Convert string dates back to Date objects
+                contentItems = contentItems.map(item => {
+                    return {
+                        ...item,
+                        date: new Date(item.date)
+                    };
+                });
+            } else {
+                // Initialize with sample data if no saved content
+                contentItems = getSampleContent();
+                saveContentToLocalStorage();
+            }
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Initialize the calendar view
+            renderCalendar();
+        }
+
+        // Get sample content for first-time users
+        function getSampleContent() {
+            const today = new Date();
+            const sampleContent = [
+                {
+                    id: Date.now() + 1,
+                    theme: "Product Launch",
+                    caption: "Introducing our new skincare line with special launch discounts",
+                    contentType: "Video",
+                    platform: "Instagram",
+                    format: "Reel",
+                    funnelType: "Conversion",
+                    status: "Planned",
+                    date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
+                    time: "10:00 AM"
+                },
+                {
+                    id: Date.now() + 2,
+                    theme: "Brand Awareness",
+                    caption: "Behind the scenes of our brand story and mission",
+                    contentType: "Image",
+                    platform: "Facebook",
+                    format: "Carousel",
+                    funnelType: "Awareness",
+                    status: "Draft",
+                    date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2),
+                    time: "2:30 PM"
+                },
+                {
+                    id: Date.now() + 3,
+                    theme: "Customer Engagement",
+                    caption: "Tell us your favorite product and win a surprise gift!",
+                    contentType: "Poll",
+                    platform: "Instagram",
+                    format: "Story",
+                    funnelType: "Engagement",
+                    status: "Planned",
+                    date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3),
+                    time: "9:00 AM"
+                }
+            ];
+            
+            return sampleContent;
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            startPlanningBtn.addEventListener('click', startPlanning);
+            printBtn.addEventListener('click', printCalendar);
+            saveBtn.addEventListener('click', saveCalendar);
+            newPlanBtn.addEventListener('click', resetCalendar);
+            backToCalendarBtn.addEventListener('click', showCalendar);
+            prevMonthBtn.addEventListener('click', () => changeMonth(-1));
+            nextMonthBtn.addEventListener('click', () => changeMonth(1));
+            todayBtn.addEventListener('click', goToToday);
+            addContentBtn.addEventListener('click', showAddContentModal);
+            exportPdfBtn.addEventListener('click', exportAsPdf);
+            exportPngBtn.addEventListener('click', exportAsPng);
+            printWeekBtn.addEventListener('click', printWeek);
+            closeModal.addEventListener('click', hideAddContentModal);
+            cancelContentBtn.addEventListener('click', hideAddContentModal);
+            contentForm.addEventListener('submit', handleAddContent);
+        }
+
+        // Start planning function
+        function startPlanning() {
+            // Get user data
+            const name = userNameInput.value.trim();
+            const email = userEmailInput.value.trim();
+            
+            if (!name || !email) {
+                showToast('Please enter your name and email to continue.', 'error');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showToast('Please enter a valid email address.', 'error');
+                return;
+            }
+            
+            // Show loading spinner
+            showSpinner();
+            
+            // Save user data
+            userData = { name, email };
+            localStorage.setItem('contentCalendarUser', JSON.stringify(userData));
+            
+            // Send data to backend
+            sendUserDataToBackend(userData)
+                .then(() => {
+                    hideSpinner();
+                    showCalendar();
+                    showToast('Welcome to Tempest Calendar! Start planning your content.', 'success');
+                })
+                .catch(error => {
+                    hideSpinner();
+                    console.error('Error saving user data:', error);
+                    showToast('Error connecting to server. Working offline.', 'warning');
+                    showCalendar(); // Show calendar even if backend fails
+                });
+        }
+
+        // Validate email format
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Send user data to backend
+        async function sendUserDataToBackend(userData) {
+            try {
+                const response = await fetch('https://contentbackend-production.up.railway.app/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const data = await response.json();
+                console.log('User data saved to backend:', data);
+                return data;
+            } catch (error) {
+                console.error('Error saving user data:', error);
+                throw error;
+            }
+        }
+
+        // Show calendar section
+        function showCalendar() {
+            welcomeSection.style.display = 'none';
+            weekViewSection.style.display = 'none';
+            calendarSection.style.display = 'block';
+            renderCalendar();
+        }
+
+        // Show week view section
+        function showWeekView(week) {
+            selectedWeek = week;
+            calendarSection.style.display = 'none';
+            weekViewSection.style.display = 'block';
+            
+            // Set week view dates
+            weekViewDates.textContent = `${formatDate(week.startDate)} - ${formatDate(week.endDate)}`;
+            
+            // Render days for the week
+            renderWeekView(week);
+        }
+
+        // Reset calendar
+        function resetCalendar() {
+            if (confirm('Are you sure you want to start a new plan? Your current content will be cleared.')) {
+                // Clear saved content data
+                localStorage.removeItem('contentCalendarData');
+                contentItems = getSampleContent();
+                saveContentToLocalStorage();
+                renderCalendar();
+                showToast('New content plan created!', 'success');
+            }
+        }
+
+        // Change month
+        function changeMonth(direction) {
+            currentMonth += direction;
+            
+            // Handle year change
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            
+            renderCalendar();
+        }
+
+        // Go to today
+        function goToToday() {
+            currentDate = new Date();
+            currentMonth = currentDate.getMonth();
+            currentYear = currentDate.getFullYear();
+            renderCalendar();
+            showToast('Returned to current month', 'success');
+        }
+
+        // Render calendar
+        function renderCalendar() {
+            // Update month display
+            const monthNames = ["January", "February", "March", "April", "May", "June", 
+                              "July", "August", "September", "October", "November", "December"];
+            currentMonthEl.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            
+            // Clear weeks container
+            weeksContainer.innerHTML = '';
+            
+            // Get weeks for the month
+            const weeks = getWeeksInMonth(currentMonth, currentYear);
+            
+            // Render each week
+            weeks.forEach(week => {
+                const weekElement = document.createElement('div');
+                weekElement.className = 'week-card fade-in';
+                weekElement.addEventListener('click', () => showWeekView(week));
+                
+                // Week header
+                const weekHeader = document.createElement('div');
+                weekHeader.className = 'week-header';
+                
+                const weekTitle = document.createElement('div');
+                weekTitle.className = 'week-title';
+                weekTitle.innerHTML = `<i class="fas fa-calendar-week"></i> Week ${week.weekNumber}`;
+                
+                const weekDates = document.createElement('div');
+                weekDates.className = 'week-dates';
+                weekDates.textContent = `${formatDate(week.startDate)} - ${formatDate(week.endDate)}`;
+                
+                weekHeader.appendChild(weekTitle);
+                weekHeader.appendChild(weekDates);
+                
+                // Content items container
+                const contentItemsContainer = document.createElement('div');
+                contentItemsContainer.className = 'content-items';
+                
+                // Add content items for this week
+                const weekContent = contentItems.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return itemDate >= week.startDate && itemDate <= week.endDate;
+                });
+                
+                if (weekContent.length > 0) {
+                    // Sort by date then time
+                    weekContent.sort((a, b) => {
+                        const dateA = new Date(a.date);
+                        const dateB = new Date(b.date);
+                        if (dateA - dateB !== 0) return dateA - dateB;
+                        
+                        // If same date, sort by time
+                        return a.time.localeCompare(b.time);
+                    });
+                    
+                    // Show up to 3 items (or more if space allows)
+                    const itemsToShow = Math.min(weekContent.length, 3);
+                    for (let i = 0; i < itemsToShow; i++) {
+                        const contentElement = createContentCard(weekContent[i]);
+                        contentItemsContainer.appendChild(contentElement);
+                    }
+                    
+                    // Show "X more" indicator if there are additional items
+                    if (weekContent.length > 3) {
+                        const moreItems = document.createElement('div');
+                        moreItems.className = 'content-card';
+                        moreItems.style.textAlign = 'center';
+                        moreItems.style.padding = '10px';
+                        moreItems.textContent = `${weekContent.length - 3} more items...`;
+                        contentItemsContainer.appendChild(moreItems);
+                    }
+                } else {
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'content-card';
+                    emptyState.innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: #64748b;">
+                            <i class="fas fa-calendar-plus" style="font-size: 24px; margin-bottom: 10px;"></i>
+                            <p>No content planned yet</p>
+                        </div>
+                    `;
+                    contentItemsContainer.appendChild(emptyState);
+                }
+                
+                // Add to week container
+                weekElement.appendChild(weekHeader);
+                weekElement.appendChild(contentItemsContainer);
+                
+                weeksContainer.appendChild(weekElement);
+            });
+        }
+
+        // Format date as "Mon DD, YYYY"
+        function formatDate(date) {
+            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Format date as "Mon DD"
+        function formatShortDate(date) {
+            const options = { weekday: 'short', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Get weeks in a month
+        function getWeeksInMonth(month, year) {
+            const weeks = [];
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            
+            let currentWeekStart = new Date(firstDay);
+            let weekNumber = 1;
+            
+            // Adjust to start on Monday
+            if (currentWeekStart.getDay() !== 1) {
+                const diff = currentWeekStart.getDay() === 0 ? 6 : currentWeekStart.getDay() - 1;
+                currentWeekStart.setDate(currentWeekStart.getDate() - diff);
+            }
+            
+            while (currentWeekStart <= lastDay) {
+                const currentWeekEnd = new Date(currentWeekStart);
+                currentWeekEnd.setDate(currentWeekEnd.getDate() + 6);
+                
+                // If week extends into next month, adjust
+                if (currentWeekEnd.getMonth() !== month) {
+                    currentWeekEnd.setDate(lastDay.getDate());
+                }
+                
+                weeks.push({
+                    weekNumber: weekNumber++,
+                    startDate: new Date(currentWeekStart),
+                    endDate: new Date(currentWeekEnd)
+                });
+                
+                // Move to next week
+                currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+            }
+            
+            return weeks;
+        }
+
+        // Create content card
+        function createContentCard(content) {
+            const card = document.createElement('div');
+            card.className = 'content-card';
+            
+            const platform = document.createElement('div');
+            platform.className = 'card-platform';
+            platform.textContent = content.platform;
+            
+            const theme = document.createElement('div');
+            theme.className = 'card-theme';
+            theme.textContent = content.theme;
+            
+            const details = document.createElement('div');
+            details.className = 'card-details';
+            details.textContent = content.caption;
+            
+            card.appendChild(platform);
+            card.appendChild(theme);
+            card.appendChild(details);
+            
+            return card;
+        }
+
+        // Render week view
+        function renderWeekView(week) {
+            // Clear days container
+            daysContainer.innerHTML = '';
+            
+            // Create a day for each date in the week
+            const currentDate = new Date(week.startDate);
+            const endDate = new Date(week.endDate);
+            
+            while (currentDate <= endDate) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day-column fade-in';
+                
+                // Day header
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                
+                const dayTitle = document.createElement('div');
+                dayTitle.className = 'day-title';
+                dayTitle.textContent = formatShortDate(currentDate);
+                
+                const dayDate = document.createElement('div');
+                dayDate.className = 'day-date';
+                dayDate.textContent = currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                
+                dayHeader.appendChild(dayTitle);
+                dayHeader.appendChild(dayDate);
+                
+                // Content table
+                const table = document.createElement('table');
+                table.className = 'content-table';
+                
+                // Table header
+                const thead = document.createElement('thead');
+                thead.innerHTML = `
+                    <tr>
+                        <th>Time</th>
+                        <th>Content Type</th>
+                        <th>Theme</th>
+                        <th>Platform</th>
+                        <th>Status</th>
+                    </tr>
+                `;
+                
+                // Table body
+                const tbody = document.createElement('tbody');
+                
+                // Get content for this day
+                const dayContent = contentItems.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return itemDate.toDateString() === currentDate.toDateString();
+                });
+                
+                if (dayContent.length > 0) {
+                    // Sort by time
+                    dayContent.sort((a, b) => a.time.localeCompare(b.time));
+                    
+                    dayContent.forEach(content => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${content.time}</td>
+                            <td><span class="tag tag-content-type">${content.contentType}</span></td>
+                            <td>${content.theme}</td>
+                            <td><span class="tag tag-platform">${content.platform}</span></td>
+                            <td><span class="tag ${getStatusClass(content.status)}">${content.status}</span></td>
+                        `;
+                        row.addEventListener('click', () => showContentDetails(content));
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="5" style="text-align: center; padding: 30px; color: #64748b;">
+                            <i class="fas fa-calendar-plus"></i> No content scheduled
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                }
+                
+                table.appendChild(thead);
+                table.appendChild(tbody);
+                
+                // Add to day container
+                dayElement.appendChild(dayHeader);
+                dayElement.appendChild(table);
+                
+                daysContainer.appendChild(dayElement);
+                
+                // Move to next day
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+        }
+
+        // Get CSS class for status tag
+        function getStatusClass(status) {
+            switch (status.toLowerCase()) {
+                case 'published':
+                    return 'tag-success';
+                case 'ready':
+                    return 'tag-teal';
+                case 'draft':
+                    return 'tag-warning';
+                case 'planned':
+                default:
+                    return '';
+            }
+        }
+
+        // Show content details
+        function showContentDetails(content) {
+            // In a full implementation, this would show a modal with all content details
+            // For this demo, we'll show a toast notification
+            showToast(`Viewing details for: ${content.theme}`, 'info');
+        }
+
+        // Show add content modal
+        function showAddContentModal() {
+            // Reset form
+            contentForm.reset();
+            
+            // Set default date to today
+            const today = new Date();
+            document.getElementById('contentDate').valueAsDate = today;
+            
+            // Show modal
+            contentModal.style.display = 'flex';
+        }
+
+        // Hide add content modal
+        function hideAddContentModal() {
+            contentModal.style.display = 'none';
+        }
+
+        // Handle add content form submission
+        function handleAddContent(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const theme = document.getElementById('contentTheme').value.trim();
+            const date = document.getElementById('contentDate').value;
+            const contentType = document.getElementById('contentType').value;
+            const platform = document.getElementById('contentPlatform').value;
+            const format = document.getElementById('contentFormat').value;
+            const time = document.getElementById('contentTime').value;
+            const funnelType = document.getElementById('funnelType').value;
+            const status = document.getElementById('contentStatus').value;
+            const caption = document.getElementById('contentCaption').value.trim();
+            
+            // Validate required fields
+            if (!theme || !date || !contentType || !platform || !format || !time || !funnelType) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Format time for display (convert from 24h to 12h)
+            const timeParts = time.split(':');
+            let hours = parseInt(timeParts[0]);
+            const minutes = timeParts[1];
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // Convert 0 to 12
+            const displayTime = `${hours}:${minutes} ${ampm}`;
+            
+            // Create new content item
+            const newContent = {
+                id: Date.now(),
+                theme,
+                caption: caption || `Content for ${theme}`,
+                contentType,
+                platform,
+                format,
+                funnelType,
+                status,
+                date: new Date(date),
+                time: displayTime
+            };
+            
+            // Add to content items
+            contentItems.push(newContent);
+            
+            // Save to localStorage
+            saveContentToLocalStorage();
+            
+            // Hide modal
+            hideAddContentModal();
+            
+            // Re-render calendar
+            renderCalendar();
+            
+            // Show success message
+            showToast('Content added successfully!', 'success');
+        }
+
+        // Save content to localStorage
+        function saveContentToLocalStorage() {
+            // Convert Date objects to strings for localStorage
+            const contentToSave = contentItems.map(item => {
+                return {
+                    ...item,
+                    date: item.date.toISOString() // Convert Date to string
+                };
+            });
+            
+            localStorage.setItem('contentCalendarData', JSON.stringify(contentToSave));
+        }
+
+        // Save calendar
+        function saveCalendar() {
+            // Save content to localStorage
+            saveContentToLocalStorage();
+            
+            // Show success message
+            showToast('Calendar saved successfully!', 'success');
+        }
+
+        // Print calendar
+        function printCalendar() {
+            window.print();
+        }
+
+        // Export as PDF
+        function exportAsPdf() {
+            showSpinner();
+            
+            // Use html2canvas and jsPDF to generate PDF
+            const { jsPDF } = window.jspdf;
+            
+            html2canvas(weekViewSection).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('landscape');
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save(`content-calendar-${formatDate(selectedWeek.startDate)}.pdf`);
+                hideSpinner();
+                showToast('PDF exported successfully!', 'success');
+            }).catch(error => {
+                hideSpinner();
+                console.error('Error exporting PDF:', error);
+                showToast('Error exporting PDF', 'error');
+            });
+        }
+
+        // Export as PNG
+        function exportAsPng() {
+            showSpinner();
+            
+            html2canvas(weekViewSection).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `content-calendar-${formatDate(selectedWeek.startDate)}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                hideSpinner();
+                showToast('PNG exported successfully!', 'success');
+            }).catch(error => {
+                hideSpinner();
+                console.error('Error exporting PNG:', error);
+                showToast('Error exporting PNG', 'error');
+            });
+        }
+
+        // Print week view
+        function printWeek() {
+            window.print();
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            // Set message and style based on type
+            toastMessage.textContent = message;
+            
+            // Reset classes
+            toast.className = 'toast';
+            
+            // Add type-specific class
+            switch (type) {
+                case 'error':
+                    toast.style.background = 'var(--danger)';
+                    break;
+                case 'warning':
+                    toast.style.background = 'var(--warning)';
+                    toast.style.color = 'var(--dark)';
+                    break;
+                case 'info':
+                    toast.style.background = 'var(--accent)';
+                    break;
+                case 'success':
+                default:
+                    toast.style.background = 'var(--success)';
+            }
+            
+            // Show toast
+            toast.classList.add('show');
+            
+            // Hide after delay
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Show loading spinner
+        function showSpinner() {
+            spinner.classList.add('active');
+        }
+
+        // Hide loading spinner
+        function hideSpinner() {
+            spinner.classList.remove('active');
+        }
+
+        // Initialize the app when the page loads
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
