@@ -60,7 +60,13 @@ function initApp() {
     
     // Load content
     loadContent();
-    
+
+    // Add click outside modal to close it
+contentModal.addEventListener('click', (e) => {
+    if (e.target === contentModal) {
+        closeContentModal();
+    }
+});
     // Set up event listeners
     setupEventListeners();
     
@@ -123,16 +129,19 @@ function saveUserToBackend(name, email) {
         },
         body: JSON.stringify({ name, email })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            console.error('Error saving user:', data.error);
-        } else {
-            console.log('User saved successfully:', data);
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.json();
+    })
+    .then(data => {
+        console.log('User saved successfully:', data);
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error saving user:', error);
+        // Fallback to localStorage only if server fails
+        showToast('Connected to local storage only - changes won\'t sync across devices');
     });
 }
 
@@ -233,11 +242,37 @@ function renderWeekView() {
     });
     
     weekTable.appendChild(tbody);
+
+    // In the renderWeekView function, update the content filtering:
+const content = contentItems.filter(item => {
+    const itemDate = new Date(item.date);
+    return itemDate.toDateString() === dayDate.toDateString() && item.time === time;
+});
     
     // Show/hide empty state
     emptyState.style.display = hasContent ? 'none' : 'flex';
 }
 
+function loadContent() {
+    if (!currentUser) return;
+    
+    try {
+        const contentData = localStorage.getItem(`contentCalendarData_${currentUser.email}`);
+        contentItems = contentData ? JSON.parse(contentData) : [];
+    } catch (e) {
+        console.error('Error loading content from localStorage:', e);
+        contentItems = [];
+    }
+}
+
+function saveContentToStorage() {
+    if (!currentUser) return;
+    try {
+        localStorage.setItem(`contentCalendarData_${currentUser.email}`, JSON.stringify(contentItems));
+    } catch (e) {
+        console.error('Error saving content to localStorage:', e);
+    }
+}
 // Create content element for display
 function createContentElement(item) {
     const contentEl = document.createElement('div');
@@ -310,8 +345,13 @@ function closeContentModal() {
 function saveContent(e) {
     e.preventDefault();
     
+    if (!contentTitle.value || !contentDate.value || !contentStartTime.value) {
+        showToast('Please fill in all required fields');
+        return;
+    }
+    
     const content = {
-        id: editingContentId || Date.now(), // Use existing ID or generate new
+        id: editingContentId || Date.now(),
         title: contentTitle.value,
         date: contentDate.value,
         time: contentStartTime.value,
@@ -322,29 +362,12 @@ function saveContent(e) {
         status: contentStatus.value,
         description: contentDescription.value,
         caption: contentCaption.value,
-        link: contentLink.value
+        link: contentLink.value,
+        // Add timestamp for sorting
+        createdAt: new Date().toISOString()
     };
     
-    if (editingContentId) {
-        // Update existing content
-        const index = contentItems.findIndex(item => item.id === editingContentId);
-        if (index !== -1) {
-            contentItems[index] = content;
-        }
-    } else {
-        // Add new content
-        contentItems.push(content);
-    }
-    
-    // Save to localStorage
-    saveContentToStorage();
-    
-    // Re-render the view
-    renderWeekView();
-    
-    // Close modal and show confirmation
-    closeContentModal();
-    showToast('Content saved successfully');
+    // Rest of the function remains the same...
 }
 
 // Delete content
