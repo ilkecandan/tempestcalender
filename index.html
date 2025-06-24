@@ -3,826 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Create beautiful content calendars with Tempest Labs' intuitive planning tool">
-    <title>Tempest Content Calendar | Plan Your Social Media Strategy</title>
+    <meta name="description" content="Plan your content strategy with Tempest Labs' elegant scrapbook-style calendar">
+    <title>Tempest Content Planner | Creative Content Calendar</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --accent: #4cc9f0;
-            --teal: #2ec4b6;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4ade80;
-            --warning: #facc15;
-            --danger: #f87171;
-            --card-bg: #ffffff;
-            --border: #e2e8f0;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        body {
-            background: #f0f4f8;
-            color: var(--dark);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .app-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            color: var(--secondary);
-            font-size: 20px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: white;
-            border: 1px solid var(--border);
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 14px;
-        }
-
-        .welcome-section {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .welcome-section h1 {
-            font-size: 32px;
-            margin-bottom: 15px;
-            color: var(--secondary);
-        }
-
-        .user-form {
-            max-width: 500px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            text-align: left;
-        }
-
-        .form-group input {
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-        }
-
-        .calendar-section, .week-view-section {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .current-month {
-            font-weight: 700;
-            font-size: 20px;
-            color: var(--secondary);
-        }
-
-        .weeks-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-        }
-
-        .week-card {
-            background: white;
-            border-radius: 12px;
-            padding: 15px;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .week-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .week-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .week-title {
-            font-weight: 600;
-        }
-
-        .content-items {
-            min-height: 100px;
-        }
-
-        .content-card {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .week-view-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .days-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-        }
-
-        .day-column {
-            background: white;
-            border-radius: 12px;
-            padding: 15px;
-            border: 1px solid var(--border);
-        }
-
-        .day-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .content-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .content-table th {
-            text-align: left;
-            padding: 8px;
-            font-size: 14px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .content-table td {
-            padding: 8px;
-            border-bottom: 1px solid var(--border);
-            font-size: 14px;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-
-        .tag-platform {
-            background: rgba(67, 97, 238, 0.1);
-            color: var(--primary);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 20px;
-            color: #64748b;
-        }
-
-        .add-content-btn {
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            width: 90%;
-            max-width: 500px;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-col {
-            flex: 1;
-        }
-
-        .form-col select, 
-        .form-col input, 
-        .form-col textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--success);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .weeks-container, .days-container {
-                grid-template-columns: 1fr;
-            }
-            
-            header {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .calendar-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-    </style>
 </head>
 <body>
     <div class="app-container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Tempest Calendar</span>
-            </div>
-            <div>
-                <button class="btn btn-secondary btn-sm" id="printBtn">
-                    <i class="fas fa-print"></i> Print
-                </button>
-                <button class="btn btn-primary btn-sm" id="newContentBtn">
-                    <i class="fas fa-plus"></i> Add Content
-                </button>
-            </div>
-        </header>
-
+        <!-- Welcome Screen -->
         <section class="welcome-section" id="welcomeSection">
-            <h1>Plan Your Content Strategy</h1>
-            <p>Create and organize your social media content with our intuitive calendar</p>
-            
-            <div class="user-form">
-                <div class="form-group">
-                    <label for="userName">Your Name</label>
-                    <input type="text" id="userName" placeholder="Enter your name" required>
+            <div class="scrapbook-corner"></div>
+            <div class="welcome-content">
+                <h1><span class="highlight">Plan</span> Your Content Journey</h1>
+                <p>Create beautiful content strategies with our scrapbook-inspired planner</p>
+                <div class="user-form">
+                    <div class="form-group">
+                        <label for="userName"><i class="fas fa-user"></i> Your Name</label>
+                        <input type="text" id="userName" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail"><i class="fas fa-envelope"></i> Your Email</label>
+                        <input type="email" id="userEmail" placeholder="Enter your email" required>
+                    </div>
+                    <button class="btn btn-primary" id="startPlanningBtn">
+                        Start Planning <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label for="userEmail">Your Email</label>
-                    <input type="email" id="userEmail" placeholder="Enter your email" required>
+                <div class="footer-links">
+                    <a href="https://tempestlabs.space/" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Visit Tempest Labs
+                    </a>
                 </div>
-                <button class="btn btn-primary" id="startPlanningBtn">
-                    Start Planning <i class="fas fa-arrow-right"></i>
-                </button>
             </div>
         </section>
 
-        <section class="calendar-section" id="calendarSection">
-            <div class="calendar-header">
-                <div>
-                    <span class="current-month" id="currentMonth"></span>
+        <!-- Main App -->
+        <section class="app-section" id="appSection">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h1>Tempest <span>Planner</span></h1>
                 </div>
-                <div>
-                    <button class="btn btn-secondary btn-sm" id="prevMonthBtn">
+                <div class="controls">
+                    <button class="btn btn-secondary" id="prevWeekBtn">
                         <i class="fas fa-chevron-left"></i>
                     </button>
-                    <button class="btn btn-secondary btn-sm" id="todayBtn">
+                    <button class="btn btn-today" id="todayBtn">
                         Today
                     </button>
-                    <button class="btn btn-secondary btn-sm" id="nextMonthBtn">
+                    <button class="btn btn-secondary" id="nextWeekBtn">
                         <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="week-display" id="weekDisplay"></div>
+                    <div class="actions">
+                        <button class="btn btn-export" id="printBtn">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                        <button class="btn btn-export" id="exportPdfBtn">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                        <button class="btn btn-install" id="installBtn">
+                            <i class="fas fa-download"></i> Install App
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="week-view">
+                <table class="week-table" id="weekTable">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <!-- Days will be populated here -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Time slots will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="empty-state" id="emptyState">
+                <div class="scrapbook-paper">
+                    <i class="fas fa-calendar-plus"></i>
+                    <h3>Your week is looking empty</h3>
+                    <p>Click on a time slot to add content</p>
+                    <button class="btn btn-primary" id="addSampleContentBtn">
+                        <i class="fas fa-magic"></i> Add Sample Content
                     </button>
                 </div>
             </div>
-            
-            <div class="weeks-container" id="weeksContainer">
-                <!-- Weeks will be generated here -->
-            </div>
         </section>
-
-        <section class="week-view-section" id="weekViewSection">
-            <div class="week-view-header">
-                <div>
-                    <h2>Weekly Plan</h2>
-                    <div id="weekViewDates"></div>
-                </div>
-                <button class="btn btn-secondary" id="backToCalendarBtn">
-                    <i class="fas fa-arrow-left"></i> Back
-                </button>
-            </div>
-            
-            <div class="days-container" id="daysContainer">
-                <!-- Days will be generated here -->
-            </div>
-        </section>
-
-        <!-- Add Content Modal -->
-        <div class="modal" id="contentModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Add Content</h3>
-                    <button id="closeModal">&times;</button>
-                </div>
-                <form id="contentForm">
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label>Theme</label>
-                            <input type="text" id="contentTheme" required>
-                        </div>
-                        <div class="form-col">
-                            <label>Date</label>
-                            <input type="date" id="contentDate" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label>Platform</label>
-                            <select id="contentPlatform" required>
-                                <option value="Instagram">Instagram</option>
-                                <option value="Facebook">Facebook</option>
-                                <option value="Twitter">Twitter</option>
-                            </select>
-                        </div>
-                        <div class="form-col">
-                            <label>Time</label>
-                            <input type="time" id="contentTime" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-col">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Toast Notification -->
-        <div class="toast" id="toast"></div>
     </div>
 
-    <script>
-        // DOM Elements
-        const welcomeSection = document.getElementById('welcomeSection');
-        const calendarSection = document.getElementById('calendarSection');
-        const weekViewSection = document.getElementById('weekViewSection');
-        const startPlanningBtn = document.getElementById('startPlanningBtn');
-        const currentMonthEl = document.getElementById('currentMonth');
-        const weeksContainer = document.getElementById('weeksContainer');
-        const daysContainer = document.getElementById('daysContainer');
-        const weekViewDates = document.getElementById('weekViewDates');
-        const prevMonthBtn = document.getElementById('prevMonthBtn');
-        const nextMonthBtn = document.getElementById('nextMonthBtn');
-        const todayBtn = document.getElementById('todayBtn');
-        const backToCalendarBtn = document.getElementById('backToCalendarBtn');
-        const newContentBtn = document.getElementById('newContentBtn');
-        const contentModal = document.getElementById('contentModal');
-        const closeModal = document.getElementById('closeModal');
-        const contentForm = document.getElementById('contentForm');
-        const toast = document.getElementById('toast');
+    <!-- Content Modal -->
+    <div class="modal" id="contentModal">
+        <div class="modal-content scrapbook-paper">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Content</h3>
+                <button id="closeModal">&times;</button>
+            </div>
+            <form id="contentForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Content Title *</label>
+                        <input type="text" id="contentTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date *</label>
+                        <input type="date" id="contentDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Time *</label>
+                        <input type="time" id="contentStartTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Platform *</label>
+                        <select id="contentPlatform" required>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="Twitter">Twitter</option>
+                            <option value="LinkedIn">LinkedIn</option>
+                            <option value="TikTok">TikTok</option>
+                            <option value="YouTube">YouTube</option>
+                            <option value="Pinterest">Pinterest</option>
+                            <option value="Blog">Blog</option>
+                            <option value="Email">Email Newsletter</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Content Type *</label>
+                        <select id="contentType" required>
+                            <option value="Image">Image Post</option>
+                            <option value="Video">Video</option>
+                            <option value="Carousel">Carousel</option>
+                            <option value="Story">Story</option>
+                            <option value="Reel">Reel</option>
+                            <option value="Live">Live Stream</option>
+                            <option value="Article">Article</option>
+                            <option value="Poll">Poll</option>
+                            <option value="Guide">Guide</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Audience Stage *</label>
+                        <select id="contentAudience" required>
+                            <option value="Awareness">Awareness (Top of Funnel)</option>
+                            <option value="Consideration">Consideration (Middle)</option>
+                            <option value="Decision">Decision (Bottom)</option>
+                            <option value="Retention">Retention</option>
+                            <option value="Advocacy">Advocacy</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Content Format</label>
+                        <select id="contentFormat">
+                            <option value="Post">Standard Post</option>
+                            <option value="Story">Story</option>
+                            <option value="Reel">Reel</option>
+                            <option value="IGTV">IGTV</option>
+                            <option value="Tweet">Tweet</option>
+                            <option value="Thread">Thread</option>
+                            <option value="Pin">Pin</option>
+                            <option value="Video">Video</option>
+                            <option value="Article">Article</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="contentStatus">
+                            <option value="Draft">Draft</option>
+                            <option value="Ready">Ready to Post</option>
+                            <option value="Scheduled">Scheduled</option>
+                            <option value="Published">Published</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label>Description</label>
+                        <textarea id="contentDescription" rows="2" placeholder="What's this content about?"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label>Caption / Key Message</label>
+                        <textarea id="contentCaption" rows="3" placeholder="Write your caption here..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label>Content Link or Upload</label>
+                        <div class="upload-container">
+                            <input type="url" id="contentLink" placeholder="https://link-to-your-content.com">
+                            <span>or</span>
+                            <label class="upload-btn">
+                                <i class="fas fa-upload"></i> Upload File
+                                <input type="file" id="contentUpload" hidden>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Content</button>
+                    <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        // App State
-        let currentDate = new Date();
-        let currentMonth = currentDate.getMonth();
-        let currentYear = currentDate.getFullYear();
-        let selectedWeek = null;
-        let contentItems = [];
-        let userData = null;
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
 
-        // Initialize App
-        function initApp() {
-            // Check for saved user
-            const savedUser = localStorage.getItem('contentCalendarUser');
-            if (savedUser) {
-                userData = JSON.parse(savedUser);
-                document.getElementById('userName').value = userData.name;
-                document.getElementById('userEmail').value = userData.email;
-                startPlanning();
-            }
-            
-            // Load content
-            const savedContent = localStorage.getItem('contentCalendarData');
-            if (savedContent) {
-                contentItems = JSON.parse(savedContent);
-            }
-            
-            // Set up event listeners
-            setupEventListeners();
-            
-            // Render initial view
-            renderCalendar();
-        }
-
-        // Set up event listeners
-        function setupEventListeners() {
-            startPlanningBtn.addEventListener('click', startPlanning);
-            prevMonthBtn.addEventListener('click', () => changeMonth(-1));
-            nextMonthBtn.addEventListener('click', () => changeMonth(1));
-            todayBtn.addEventListener('click', goToToday);
-            backToCalendarBtn.addEventListener('click', showCalendar);
-            newContentBtn.addEventListener('click', showAddContentModal);
-            closeModal.addEventListener('click', hideAddContentModal);
-            contentForm.addEventListener('submit', handleAddContent);
-        }
-
-        // Start planning
-        function startPlanning() {
-            const name = document.getElementById('userName').value.trim();
-            const email = document.getElementById('userEmail').value.trim();
-            
-            if (!name || !email) {
-                showToast('Please enter your name and email');
-                return;
-            }
-            
-            userData = { name, email };
-            localStorage.setItem('contentCalendarUser', JSON.stringify(userData));
-            
-            // In a real app, you would send this to your backend
-            console.log('User data:', userData);
-            
-            showCalendar();
-        }
-
-        // Show calendar view
-        function showCalendar() {
-            welcomeSection.style.display = 'none';
-            weekViewSection.style.display = 'none';
-            calendarSection.style.display = 'block';
-            renderCalendar();
-        }
-
-        // Render calendar
-        function renderCalendar() {
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                              "July", "August", "September", "October", "November", "December"];
-            currentMonthEl.textContent = `${monthNames[currentMonth]} ${currentYear}`;
-            
-            weeksContainer.innerHTML = '';
-            
-            const weeks = getWeeksInMonth(currentMonth, currentYear);
-            
-            weeks.forEach(week => {
-                const weekEl = document.createElement('div');
-                weekEl.className = 'week-card';
-                weekEl.addEventListener('click', () => showWeekView(week));
-                
-                const weekHeader = document.createElement('div');
-                weekHeader.className = 'week-header';
-                
-                const weekTitle = document.createElement('div');
-                weekTitle.className = 'week-title';
-                weekTitle.textContent = `Week ${week.weekNumber}`;
-                
-                const weekDates = document.createElement('div');
-                weekDates.textContent = `${formatDate(week.startDate)} - ${formatDate(week.endDate)}`;
-                
-                weekHeader.appendChild(weekTitle);
-                weekHeader.appendChild(weekDates);
-                
-                const contentItemsEl = document.createElement('div');
-                contentItemsEl.className = 'content-items';
-                
-                const weekContent = contentItems.filter(item => {
-                    const itemDate = new Date(item.date);
-                    return itemDate >= week.startDate && itemDate <= week.endDate;
-                });
-                
-                if (weekContent.length > 0) {
-                    weekContent.slice(0, 2).forEach(item => {
-                        const card = document.createElement('div');
-                        card.className = 'content-card';
-                        card.innerHTML = `
-                            <div><strong>${item.theme}</strong></div>
-                            <div>${item.platform} at ${item.time}</div>
-                        `;
-                        contentItemsEl.appendChild(card);
-                    });
-                    
-                    if (weekContent.length > 2) {
-                        const more = document.createElement('div');
-                        more.className = 'content-card';
-                        more.textContent = `${weekContent.length - 2} more items...`;
-                        contentItemsEl.appendChild(more);
-                    }
-                } else {
-                    const empty = document.createElement('div');
-                    empty.className = 'empty-state';
-                    empty.innerHTML = `
-                        <p>No content planned</p>
-                        <button class="btn btn-secondary btn-sm add-content-btn">
-                            + Add Content
-                        </button>
-                    `;
-                    empty.querySelector('button').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        showAddContentModal(week.startDate);
-                    });
-                    contentItemsEl.appendChild(empty);
-                }
-                
-                weekEl.appendChild(weekHeader);
-                weekEl.appendChild(contentItemsEl);
-                
-                weeksContainer.appendChild(weekEl);
-            });
-        }
-
-        // Show week view
-        function showWeekView(week) {
-            selectedWeek = week;
-            calendarSection.style.display = 'none';
-            weekViewSection.style.display = 'block';
-            
-            weekViewDates.textContent = `${formatDate(week.startDate)} - ${formatDate(week.endDate)}`;
-            
-            renderWeekView(week);
-        }
-
-        // Render week view
-        function renderWeekView(week) {
-            daysContainer.innerHTML = '';
-            
-            const currentDate = new Date(week.startDate);
-            const endDate = new Date(week.endDate);
-            
-            while (currentDate <= endDate) {
-                const dayEl = document.createElement('div');
-                dayEl.className = 'day-column';
-                
-                const dayHeader = document.createElement('div');
-                dayHeader.className = 'day-header';
-                
-                const dayTitle = document.createElement('div');
-                dayTitle.className = 'day-title';
-                dayTitle.textContent = formatShortDate(currentDate);
-                
-                const addBtn = document.createElement('button');
-                addBtn.className = 'btn btn-secondary btn-sm';
-                addBtn.innerHTML = '<i class="fas fa-plus"></i>';
-                addBtn.addEventListener('click', () => showAddContentModal(currentDate));
-                
-                dayHeader.appendChild(dayTitle);
-                dayHeader.appendChild(addBtn);
-                
-                const dayContent = contentItems.filter(item => {
-                    const itemDate = new Date(item.date);
-                    return itemDate.toDateString() === currentDate.toDateString();
-                });
-                
-                const table = document.createElement('table');
-                table.className = 'content-table';
-                
-                if (dayContent.length > 0) {
-                    dayContent.forEach(item => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${item.time}</td>
-                            <td><span class="tag tag-platform">${item.platform}</span></td>
-                            <td>${item.theme}</td>
-                        `;
-                        table.appendChild(row);
-                    });
-                } else {
-                    const empty = document.createElement('div');
-                    empty.className = 'empty-state';
-                    empty.innerHTML = `
-                        <p>No content scheduled</p>
-                        <button class="btn btn-secondary btn-sm add-content-btn">
-                            + Add Content
-                        </button>
-                    `;
-                    empty.querySelector('button').addEventListener('click', () => showAddContentModal(currentDate));
-                    dayEl.appendChild(empty);
-                }
-                
-                dayEl.appendChild(dayHeader);
-                dayEl.appendChild(table);
-                
-                daysContainer.appendChild(dayEl);
-                
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-        }
-
-        // Show add content modal
-        function showAddContentModal(defaultDate = new Date()) {
-            contentForm.reset();
-            document.getElementById('contentDate').valueAsDate = defaultDate;
-            contentModal.style.display = 'flex';
-        }
-
-        // Hide add content modal
-        function hideAddContentModal() {
-            contentModal.style.display = 'none';
-        }
-
-        // Handle add content form
-        function handleAddContent(e) {
-            e.preventDefault();
-            
-            const theme = document.getElementById('contentTheme').value;
-            const date = document.getElementById('contentDate').value;
-            const platform = document.getElementById('contentPlatform').value;
-            const time = document.getElementById('contentTime').value;
-            
-            if (!theme || !date || !platform || !time) {
-                showToast('Please fill all fields');
-                return;
-            }
-            
-            const newContent = {
-                id: Date.now(),
-                theme,
-                date,
-                platform,
-                time,
-                status: 'Planned'
-            };
-            
-            contentItems.push(newContent);
-            localStorage.setItem('contentCalendarData', JSON.stringify(contentItems));
-            
-            hideAddContentModal();
-            
-            if (selectedWeek) {
-                renderWeekView(selectedWeek);
-            } else {
-                renderCalendar();
-            }
-            
-            showToast('Content added successfully');
-        }
-
-        // Change month
-        function changeMonth(direction) {
-            currentMonth += direction;
-            
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            } else if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            
-            renderCalendar();
-        }
-
-        // Go to today
-        function goToToday() {
-            currentDate = new Date();
-            currentMonth = currentDate.getMonth();
-            currentYear = currentDate.getFullYear();
-            renderCalendar();
-        }
-
-        // Format date
-        function formatDate(date) {
-            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        }
-
-        // Format short date
-        function formatShortDate(date) {
-            return date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' });
-        }
-
-        // Get weeks in month
-        function getWeeksInMonth(month, year) {
-            const weeks = [];
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-            
-            let currentWeekStart = new Date(firstDay);
-            let weekNumber = 1;
-            
-            if (currentWeekStart.getDay() !== 1) {
-                const diff = currentWeekStart.getDay() === 0 ? 6 : currentWeekStart.getDay() - 1;
-                currentWeekStart.setDate(currentWeekStart.getDate() - diff);
-            }
-            
-            while (currentWeekStart <= lastDay) {
-                const currentWeekEnd = new Date(currentWeekStart);
-                currentWeekEnd.setDate(currentWeekEnd.getDate() + 6);
-                
-                if (currentWeekEnd.getMonth() !== month) {
-                    currentWeekEnd.setDate(lastDay.getDate());
-                }
-                
-                weeks.push({
-                    weekNumber: weekNumber++,
-                    startDate: new Date(currentWeekStart),
-                    endDate: new Date(currentWeekEnd)
-                });
-                
-                currentWeekStart.setDate(currentWeekStart.getDate() + 7);
-            }
-            
-            return weeks;
-        }
-
-        // Show toast
-        function showToast(message) {
-            toast.textContent = message;
-            toast.style.display = 'block';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
-        }
-
-        // Initialize app
-        window.addEventListener('DOMContentLoaded', initApp);
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
