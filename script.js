@@ -1,9 +1,5 @@
 // DOM Elements
-const welcomeSection = document.getElementById('welcomeSection');
 const appSection = document.getElementById('appSection');
-const startPlanningBtn = document.getElementById('startPlanningBtn');
-const userNameInput = document.getElementById('userName');
-const userEmailInput = document.getElementById('userEmail');
 const weekDisplay = document.getElementById('weekDisplay');
 const weekTable = document.getElementById('weekTable');
 const prevWeekBtn = document.getElementById('prevWeekBtn');
@@ -36,7 +32,6 @@ const toast = document.getElementById('toast');
 
 // App State
 let currentDate = new Date();
-let currentUser = null;
 let contentItems = [];
 let editingContentId = null;
 let deferredPrompt = null;
@@ -50,13 +45,7 @@ const timeSlots = [
 
 // Initialize App
 function initApp() {
-    // Check for saved user
-    const savedUser = localStorage.getItem('contentCalendarUser');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        userNameInput.value = currentUser.name;
-        userEmailInput.value = currentUser.email;
-    }
+
     
     // Load content
     loadContent();
@@ -91,59 +80,8 @@ function setupEventListeners() {
     contentUpload.addEventListener('change', handleFileUpload);
 }
 
-// Start planning
-function startPlanning() {
-    const name = userNameInput.value.trim();
-    const email = userEmailInput.value.trim();
-    
-    if (!name || !email) {
-        showToast('Please enter your name and email');
-        return;
-    }
-    
-    if (!validateEmail(email)) {
-        showToast('Please enter a valid email address');
-        return;
-    }
-    
-    currentUser = { name, email };
-    localStorage.setItem('contentCalendarUser', JSON.stringify(currentUser));
-    
-    // Save user to backend
-    saveUserToBackend(name, email);
-    
-    // Show app section
-    welcomeSection.style.display = 'none';
-    appSection.style.display = 'block';
-    
-    // Render the current week
-    renderWeekView();
-}
 
-// Save user to backend
-function saveUserToBackend(name, email) {
-    fetch('/api/users', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, email })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('User saved successfully:', data);
-    })
-    .catch(error => {
-        console.error('Error saving user:', error);
-        // Fallback to localStorage only if server fails
-        showToast('Connected to local storage only - changes won\'t sync across devices');
-    });
-}
+
 
 // Render week view
 function renderWeekView() {
@@ -257,7 +195,7 @@ function loadContent() {
     if (!currentUser) return;
     
     try {
-        const contentData = localStorage.getItem(`contentCalendarData_${currentUser.email}`);
+const contentData = localStorage.getItem('contentCalendarData');
         contentItems = contentData ? JSON.parse(contentData) : [];
     } catch (e) {
         console.error('Error loading content from localStorage:', e);
@@ -442,7 +380,7 @@ function addSampleContent() {
 function loadContent() {
     if (!currentUser) return;
     
-    const contentData = localStorage.getItem(`contentCalendarData_${currentUser.email}`);
+const contentData = localStorage.getItem('contentCalendarData');
     if (contentData) {
         contentItems = JSON.parse(contentData);
     } else {
@@ -542,10 +480,6 @@ function getPlatformIcon(platform) {
     return icons[platform] || 'globe';
 }
 
-function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
 
 // Initialize app
 window.addEventListener('DOMContentLoaded', initApp);
