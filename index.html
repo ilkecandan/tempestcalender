@@ -14,7 +14,6 @@
 </head>
 <body>
   <div class="app-container">
-
     <!-- Main App -->
     <section class="app-section" id="appSection">
       <header>
@@ -64,6 +63,17 @@
           </button>
         </div>
       </div>
+      
+      <footer class="app-footer">
+        <div class="footer-links">
+          <a href="https://buymeacoffee.com/ilkecandan" target="_blank" class="footer-link">
+            <i class="fas fa-coffee"></i> Support Me
+          </a>
+          <a href="https://www.linkedin.com/in/ilkecandan/" target="_blank" class="footer-link">
+            <i class="fab fa-linkedin"></i> Let's Meet on LinkedIn
+          </a>
+        </div>
+      </footer>
     </section>
   </div>
 
@@ -77,23 +87,23 @@
       <form id="contentForm">
         <div class="form-row">
           <div class="form-group">
-            <label>Content Title *</label>
-            <input type="text" id="contentTitle" required>
+            <label>Content Title</label>
+            <input type="text" id="contentTitle">
           </div>
           <div class="form-group">
-            <label>Date *</label>
-            <input type="date" id="contentDate" required>
+            <label>Date</label>
+            <input type="date" id="contentDate">
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Start Time *</label>
-            <input type="time" id="contentStartTime" required>
+            <label>Time</label>
+            <input type="time" id="contentStartTime">
           </div>
           <div class="form-group">
-            <label>Platform *</label>
-            <select id="contentPlatform" required>
+            <label>Platform</label>
+            <select id="contentPlatform">
               <option value="Instagram">Instagram</option>
               <option value="Facebook">Facebook</option>
               <option value="Twitter">Twitter</option>
@@ -109,8 +119,8 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label>Content Type *</label>
-            <select id="contentType" required>
+            <label>Content Type</label>
+            <select id="contentType">
               <option value="Image">Image Post</option>
               <option value="Video">Video</option>
               <option value="Carousel">Carousel</option>
@@ -123,39 +133,13 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Audience Stage *</label>
-            <select id="contentAudience" required>
+            <label>Audience Stage</label>
+            <select id="contentAudience">
               <option value="Awareness">Awareness</option>
               <option value="Consideration">Consideration</option>
               <option value="Decision">Decision</option>
               <option value="Retention">Retention</option>
               <option value="Advocacy">Advocacy</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Content Format</label>
-            <select id="contentFormat">
-              <option value="Post">Standard Post</option>
-              <option value="Story">Story</option>
-              <option value="Reel">Reel</option>
-              <option value="IGTV">IGTV</option>
-              <option value="Tweet">Tweet</option>
-              <option value="Thread">Thread</option>
-              <option value="Pin">Pin</option>
-              <option value="Video">Video</option>
-              <option value="Article">Article</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Status</label>
-            <select id="contentStatus">
-              <option value="Draft">Draft</option>
-              <option value="Ready">Ready to Post</option>
-              <option value="Scheduled">Scheduled</option>
-              <option value="Published">Published</option>
             </select>
           </div>
         </div>
@@ -171,20 +155,6 @@
           <div class="form-group full-width">
             <label>Caption / Key Message</label>
             <textarea id="contentCaption" rows="3" placeholder="Write your caption here..."></textarea>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group full-width">
-            <label>Content Link or Upload</label>
-            <div class="upload-container">
-              <input type="url" id="contentLink" placeholder="https://link-to-your-content.com">
-              <span>or</span>
-              <label class="upload-btn">
-                <i class="fas fa-upload"></i> Upload File
-                <input type="file" id="contentUpload" hidden>
-              </label>
-            </div>
           </div>
         </div>
 
