@@ -20,8 +20,6 @@ const contentStartTime = document.getElementById('contentStartTime');
 const contentPlatform = document.getElementById('contentPlatform');
 const contentType = document.getElementById('contentType');
 const contentAudience = document.getElementById('contentAudience');
-const contentFormat = document.getElementById('contentFormat');
-const contentStatus = document.getElementById('contentStatus');
 const contentDescription = document.getElementById('contentDescription');
 const contentCaption = document.getElementById('contentCaption');
 const contentLink = document.getElementById('contentLink');
@@ -173,8 +171,17 @@ function openContentModal(date, time) {
   modalTitle.textContent = 'Add Content';
   deleteBtn.style.display = 'none';
   contentForm.reset();
+  
+  // Set default values
   contentDate.value = formatDateForInput(date);
   contentStartTime.value = convertTo24Hour(time);
+  
+  // Set current time if not provided
+  if (!time) {
+    const now = new Date();
+    contentStartTime.value = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+  }
+  
   contentModal.style.display = 'flex';
 }
 
@@ -186,14 +193,12 @@ function openEditContentModal(contentId) {
   modalTitle.textContent = 'Edit Content';
   deleteBtn.style.display = 'block';
 
-  contentTitle.value = content.title;
-  contentDate.value = content.date;
-  contentStartTime.value = content.time;
-  contentPlatform.value = content.platform;
-  contentType.value = content.type;
-  contentAudience.value = content.audience;
-  contentFormat.value = content.format || 'Post';
-  contentStatus.value = content.status || 'Draft';
+  contentTitle.value = content.title || '';
+  contentDate.value = content.date || formatDateForInput(new Date());
+  contentStartTime.value = content.time || '12:00';
+  contentPlatform.value = content.platform || 'Instagram';
+  contentType.value = content.type || 'Image';
+  contentAudience.value = content.audience || 'Awareness';
   contentDescription.value = content.description || '';
   contentCaption.value = content.caption || '';
   contentLink.value = content.link || '';
@@ -208,24 +213,17 @@ function closeContentModal() {
 function saveContent(e) {
   e.preventDefault();
 
-  if (!contentTitle.value || !contentDate.value || !contentStartTime.value) {
-    showToast('Please fill in all required fields');
-    return;
-  }
-
   const content = {
     id: editingContentId || Date.now(),
-    title: contentTitle.value,
-    date: contentDate.value,
-    time: contentStartTime.value,
-    platform: contentPlatform.value,
-    type: contentType.value,
-    audience: contentAudience.value,
-    format: contentFormat.value,
-    status: contentStatus.value,
-    description: contentDescription.value,
-    caption: contentCaption.value,
-    link: contentLink.value,
+    title: contentTitle.value || 'Untitled Content',
+    date: contentDate.value || formatDateForInput(new Date()),
+    time: contentStartTime.value || '12:00',
+    platform: contentPlatform.value || 'Instagram',
+    type: contentType.value || 'Image',
+    audience: contentAudience.value || 'Awareness',
+    description: contentDescription.value || '',
+    caption: contentCaption.value || '',
+    link: contentLink.value || '',
     createdAt: new Date().toISOString()
   };
 
@@ -238,7 +236,7 @@ function saveContent(e) {
   saveContentToStorage();
   renderWeekView();
   closeContentModal();
-  showToast('Content saved');
+  showToast('Content saved successfully');
 }
 
 function deleteContent() {
@@ -298,24 +296,30 @@ function addSampleContent() {
   showToast('Sample content added');
 }
 
-// Install PWA
+// PWA Installation
 function setupPWA() {
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     installBtn.style.display = 'inline-block';
   });
+
+  window.addEventListener('appinstalled', () => {
+    installBtn.style.display = 'none';
+    deferredPrompt = null;
+  });
 }
 
 function installPWA() {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(choiceResult => {
-    if (choiceResult.outcome === 'accepted') {
-      installBtn.style.display = 'none';
-    }
-    deferredPrompt = null;
-  });
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choiceResult => {
+      if (choiceResult.outcome === 'accepted') {
+        installBtn.style.display = 'none';
+      }
+      deferredPrompt = null;
+    });
+  }
 }
 
 // Utility Functions
@@ -344,15 +348,18 @@ function formatShortDate(date) {
 }
 
 function formatDateForData(date) {
+  if (typeof date === 'string') return date;
   return date.toISOString().split('T')[0];
 }
 
 function formatDateForInput(date) {
-  return formatDateForData(date);
+  if (typeof date === 'string') return date;
+  const d = new Date(date);
+  return d.toISOString().split('T')[0];
 }
 
 function convertTo24Hour(time12h) {
-  if (!time12h.includes(' ')) return time12h;
+  if (!time12h || !time12h.includes(' ')) return time12h || '12:00';
   const [time, modifier] = time12h.split(' ');
   let [hours, minutes] = time.split(':');
   if (hours === '12') hours = '00';
@@ -369,7 +376,7 @@ function createContentElement(item) {
     <div class="content-meta">
       <span class="content-tag"><i class="fas fa-${getPlatformIcon(item.platform)}"></i> ${item.platform}</span>
       <span class="content-tag">${item.type}</span>
-      <span class="content-tag">${item.audience}</span>
+      ${item.audience ? `<span class="content-tag">${item.audience}</span>` : ''}
     </div>
   `;
   contentEl.addEventListener('click', (e) => {
@@ -386,6 +393,7 @@ function getPlatformIcon(platform) {
     Twitter: 'twitter',
     LinkedIn: 'linkedin',
     YouTube: 'youtube',
+    TikTok: 'music',
     Pinterest: 'pinterest',
     Blog: 'blog',
     Email: 'envelope'
