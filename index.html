@@ -1,212 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Plan your content strategy with Tempest Labs' elegant scrapbook-style calendar">
-    <title>Tempest Content Planner | Creative Content Calendar</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Plan your content strategy with Tempest Labs' elegant scrapbook-style calendar"/>
+  <title>Tempest Content Planner | Creative Content Calendar</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 </head>
 <body>
-    <div class="app-container">
+  <div class="app-container">
 
-        <!-- Main App -->
-        <section class="app-section" id="appSection">
-            <header>
-                <div class="logo">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h1>Tempest <span>Planner</span></h1>
-                </div>
-                <div class="controls">
-                    <button class="btn btn-secondary" id="prevWeekBtn">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="btn btn-today" id="todayBtn">
-                        Today
-                    </button>
-                    <button class="btn btn-secondary" id="nextWeekBtn">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <div class="week-display" id="weekDisplay"></div>
-                    <div class="actions">
-                        <button class="btn btn-export" id="printBtn">
-                            <i class="fas fa-print"></i> Print
-                        </button>
-                        <button class="btn btn-export" id="exportPdfBtn">
-                            <i class="fas fa-file-pdf"></i> PDF
-                        </button>
-                        <button class="btn btn-install" id="installBtn">
-                            <i class="fas fa-download"></i> Install App
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            <div class="week-view">
-                <table class="week-table" id="weekTable">
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <!-- Days will be populated here -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Time slots will be populated here -->
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="empty-state" id="emptyState">
-                <div class="scrapbook-paper">
-                    <i class="fas fa-calendar-plus"></i>
-                    <h3>Your week is looking empty</h3>
-                    <p>Click on a time slot to add content</p>
-                    <button class="btn btn-primary" id="addSampleContentBtn">
-                        <i class="fas fa-magic"></i> Add Sample Content
-                    </button>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- Content Modal -->
-    <div class="modal" id="contentModal">
-        <div class="modal-content scrapbook-paper">
-            <div class="modal-header">
-                <h3 id="modalTitle">Add Content</h3>
-                <button id="closeModal">&times;</button>
-            </div>
-            <form id="contentForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Content Title *</label>
-                        <input type="text" id="contentTitle" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Date *</label>
-                        <input type="date" id="contentDate" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Start Time *</label>
-                        <input type="time" id="contentStartTime" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Platform *</label>
-                        <select id="contentPlatform" required>
-                            <option value="Instagram">Instagram</option>
-                            <option value="Facebook">Facebook</option>
-                            <option value="Twitter">Twitter</option>
-                            <option value="LinkedIn">LinkedIn</option>
-                            <option value="TikTok">TikTok</option>
-                            <option value="YouTube">YouTube</option>
-                            <option value="Pinterest">Pinterest</option>
-                            <option value="Blog">Blog</option>
-                            <option value="Email">Email Newsletter</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Content Type *</label>
-                        <select id="contentType" required>
-                            <option value="Image">Image Post</option>
-                            <option value="Video">Video</option>
-                            <option value="Carousel">Carousel</option>
-                            <option value="Story">Story</option>
-                            <option value="Reel">Reel</option>
-                            <option value="Live">Live Stream</option>
-                            <option value="Article">Article</option>
-                            <option value="Poll">Poll</option>
-                            <option value="Guide">Guide</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Audience Stage *</label>
-                        <select id="contentAudience" required>
-                            <option value="Awareness">Awareness (Top of Funnel)</option>
-                            <option value="Consideration">Consideration (Middle)</option>
-                            <option value="Decision">Decision (Bottom)</option>
-                            <option value="Retention">Retention</option>
-                            <option value="Advocacy">Advocacy</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Content Format</label>
-                        <select id="contentFormat">
-                            <option value="Post">Standard Post</option>
-                            <option value="Story">Story</option>
-                            <option value="Reel">Reel</option>
-                            <option value="IGTV">IGTV</option>
-                            <option value="Tweet">Tweet</option>
-                            <option value="Thread">Thread</option>
-                            <option value="Pin">Pin</option>
-                            <option value="Video">Video</option>
-                            <option value="Article">Article</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select id="contentStatus">
-                            <option value="Draft">Draft</option>
-                            <option value="Ready">Ready to Post</option>
-                            <option value="Scheduled">Scheduled</option>
-                            <option value="Published">Published</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label>Description</label>
-                        <textarea id="contentDescription" rows="2" placeholder="What's this content about?"></textarea>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label>Caption / Key Message</label>
-                        <textarea id="contentCaption" rows="3" placeholder="Write your caption here..."></textarea>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label>Content Link or Upload</label>
-                        <div class="upload-container">
-                            <input type="url" id="contentLink" placeholder="https://link-to-your-content.com">
-                            <span>or</span>
-                            <label class="upload-btn">
-                                <i class="fas fa-upload"></i> Upload File
-                                <input type="file" id="contentUpload" hidden>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Content</button>
-                    <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
-                </div>
-            </form>
+    <!-- Main App -->
+    <section class="app-section" id="appSection">
+      <header>
+        <div class="logo">
+          <i class="fas fa-calendar-alt"></i>
+          <h1>Tempest <span> Content Planner</span></h1>
         </div>
+        <div class="controls">
+          <button class="btn btn-secondary" id="prevWeekBtn">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="btn btn-today" id="todayBtn">Today</button>
+          <button class="btn btn-secondary" id="nextWeekBtn">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+          <div class="week-display" id="weekDisplay"></div>
+          <div class="actions">
+            <button class="btn btn-export" id="printBtn">
+              <i class="fas fa-print"></i> Print
+            </button>
+            <button class="btn btn-export" id="exportPdfBtn">
+              <i class="fas fa-file-pdf"></i> PDF
+            </button>
+            <button class="btn btn-install" id="installBtn" style="display: none;">
+              <i class="fas fa-download"></i> Install App
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="week-view">
+        <table class="week-table" id="weekTable">
+          <thead>
+            <tr><th>Time</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" id="emptyState">
+        <div class="scrapbook-paper">
+          <i class="fas fa-calendar-plus"></i>
+          <h3>Your week is looking empty</h3>
+          <p>Click on a time slot to add content</p>
+          <button class="btn btn-primary" id="addSampleContentBtn">
+            <i class="fas fa-magic"></i> Add Sample Content
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Content Modal -->
+  <div class="modal" id="contentModal">
+    <div class="modal-content scrapbook-paper">
+      <div class="modal-header">
+        <h3 id="modalTitle">Add Content</h3>
+        <button id="closeModal">&times;</button>
+      </div>
+      <form id="contentForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Content Title *</label>
+            <input type="text" id="contentTitle" required>
+          </div>
+          <div class="form-group">
+            <label>Date *</label>
+            <input type="date" id="contentDate" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Start Time *</label>
+            <input type="time" id="contentStartTime" required>
+          </div>
+          <div class="form-group">
+            <label>Platform *</label>
+            <select id="contentPlatform" required>
+              <option value="Instagram">Instagram</option>
+              <option value="Facebook">Facebook</option>
+              <option value="Twitter">Twitter</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="TikTok">TikTok</option>
+              <option value="YouTube">YouTube</option>
+              <option value="Pinterest">Pinterest</option>
+              <option value="Blog">Blog</option>
+              <option value="Email">Email Newsletter</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Content Type *</label>
+            <select id="contentType" required>
+              <option value="Image">Image Post</option>
+              <option value="Video">Video</option>
+              <option value="Carousel">Carousel</option>
+              <option value="Story">Story</option>
+              <option value="Reel">Reel</option>
+              <option value="Live">Live Stream</option>
+              <option value="Article">Article</option>
+              <option value="Poll">Poll</option>
+              <option value="Guide">Guide</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Audience Stage *</label>
+            <select id="contentAudience" required>
+              <option value="Awareness">Awareness</option>
+              <option value="Consideration">Consideration</option>
+              <option value="Decision">Decision</option>
+              <option value="Retention">Retention</option>
+              <option value="Advocacy">Advocacy</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Content Format</label>
+            <select id="contentFormat">
+              <option value="Post">Standard Post</option>
+              <option value="Story">Story</option>
+              <option value="Reel">Reel</option>
+              <option value="IGTV">IGTV</option>
+              <option value="Tweet">Tweet</option>
+              <option value="Thread">Thread</option>
+              <option value="Pin">Pin</option>
+              <option value="Video">Video</option>
+              <option value="Article">Article</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="contentStatus">
+              <option value="Draft">Draft</option>
+              <option value="Ready">Ready to Post</option>
+              <option value="Scheduled">Scheduled</option>
+              <option value="Published">Published</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label>Description</label>
+            <textarea id="contentDescription" rows="2" placeholder="What's this content about?"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label>Caption / Key Message</label>
+            <textarea id="contentCaption" rows="3" placeholder="Write your caption here..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label>Content Link or Upload</label>
+            <div class="upload-container">
+              <input type="url" id="contentLink" placeholder="https://link-to-your-content.com">
+              <span>or</span>
+              <label class="upload-btn">
+                <i class="fas fa-upload"></i> Upload File
+                <input type="file" id="contentUpload" hidden>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Content</button>
+          <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast"></div>
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
