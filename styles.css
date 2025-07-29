@@ -22,8 +22,7 @@
 
 body {
   font-family: 'Raleway', sans-serif;
-  background: url('images/background.webp') no-repeat center center fixed;
-  background-size: cover;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   color: #333;
   line-height: 1.6;
   min-height: 100vh;
@@ -41,7 +40,7 @@ body {
 
 /* App Section */
 .app-section {
-  display: block;
+  display: none;
   background: var(--light-bg);
   border-radius: 12px;
   overflow: hidden;
@@ -85,7 +84,7 @@ header {
 }
 
 .btn {
-  padding: 14px 28px;
+  padding: 10px 20px;
   border-radius: 8px;
   border: none;
   font-weight: 600;
@@ -94,8 +93,8 @@ header {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  font-size: 1rem;
+  gap: 8px;
+  font-size: 0.9rem;
 }
 
 .btn-primary {
@@ -114,6 +113,7 @@ header {
   background: rgba(255, 255, 255, 0.15);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 15px;
 }
 
 .btn-secondary:hover {
@@ -151,7 +151,7 @@ header {
 }
 
 .week-display {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 500;
   min-width: 250px;
   text-align: center;
@@ -168,7 +168,7 @@ header {
 
 /* Week View */
 .week-view {
-  padding: 30px;
+  padding: 20px;
   min-height: 600px;
 }
 
@@ -186,10 +186,10 @@ header {
 .week-table th {
   background: var(--primary);
   color: white;
-  padding: 18px 12px;
+  padding: 15px 10px;
   text-align: center;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
   position: relative;
 }
 
@@ -198,10 +198,10 @@ header {
 }
 
 .week-table td {
-  padding: 12px;
+  padding: 10px;
   border: 1px solid var(--paper-border);
   vertical-align: top;
-  height: 100px;
+  height: 90px;
   transition: var(--transition);
   position: relative;
   background: rgba(255, 255, 255, 0.7);
@@ -228,10 +228,10 @@ header {
 
 .add-content-btn {
   position: absolute;
-  bottom: 8px;
-  right: 8px;
-  width: 28px;
-  height: 28px;
+  bottom: 5px;
+  right: 5px;
+  width: 24px;
+  height: 24px;
   background: var(--accent);
   color: var(--secondary);
   border: none;
@@ -242,7 +242,7 @@ header {
   cursor: pointer;
   opacity: 0;
   transition: var(--transition);
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .content-cell:hover .add-content-btn {
@@ -252,8 +252,8 @@ header {
 .content-item {
   background: white;
   border-radius: 6px;
-  padding: 10px;
-  margin-bottom: 8px;
+  padding: 8px;
+  margin-bottom: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   border-left: 3px solid var(--primary);
   cursor: pointer;
@@ -269,41 +269,45 @@ header {
 
 .content-title {
   font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 5px;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
   color: var(--secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .content-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  font-size: 0.8rem;
+  gap: 5px;
+  font-size: 0.75rem;
   color: #666;
 }
 
 .content-tag {
   background: rgba(136, 201, 191, 0.2);
-  padding: 3px 8px;
+  padding: 2px 6px;
   border-radius: 12px;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
+  white-space: nowrap;
 }
 
 /* Empty State */
 .empty-state {
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   min-height: 400px;
-  padding: 40px;
+  padding: 30px;
 }
 
 .scrapbook-paper {
   background: var(--paper);
   border-radius: 8px;
-  padding: 40px;
+  padding: 30px;
   text-align: center;
   box-shadow: var(--shadow);
   border: 1px solid var(--paper-border);
@@ -312,16 +316,21 @@ header {
 }
 
 .scrapbook-paper i {
-  font-size: 3rem;
+  font-size: 2.5rem;
   color: var(--accent);
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .scrapbook-paper h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.8rem;
-  margin-bottom: 15px;
+  font-size: 1.6rem;
+  margin-bottom: 10px;
   color: var(--secondary);
+}
+
+.scrapbook-paper p {
+  margin-bottom: 20px;
+  color: #666;
 }
 
 /* Modal */
@@ -341,28 +350,29 @@ header {
 
 .modal-content {
   width: 100%;
-  max-width: 700px;
+  max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
+  padding: 25px;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .modal-header h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   color: var(--secondary);
 }
 
 .modal-header button {
   background: none;
   border: none;
-  font-size: 2rem;
+  font-size: 1.8rem;
   cursor: pointer;
   color: #777;
   transition: var(--transition);
@@ -375,8 +385,8 @@ header {
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: 15px;
+  margin-bottom: 15px;
 }
 
 .form-group {
@@ -389,7 +399,8 @@ header {
 }
 
 .form-group label {
-  margin-bottom: 8px;
+  display: block;
+  margin-bottom: 6px;
   font-weight: 500;
   color: var(--secondary);
 }
@@ -398,12 +409,13 @@ header {
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
   background: white;
   transition: var(--transition);
+  font-family: 'Raleway', sans-serif;
 }
 
 .form-group select:focus,
@@ -414,33 +426,10 @@ header {
   box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.2);
 }
 
-.upload-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.upload-btn {
-  background: rgba(136, 201, 191, 0.2);
-  color: var(--secondary);
-  padding: 12px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: var(--transition);
-}
-
-.upload-btn:hover {
-  background: rgba(136, 201, 191, 0.3);
-}
-
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 15px;
+  gap: 10px;
   margin-top: 20px;
 }
 
@@ -461,7 +450,7 @@ header {
   transform: translateX(-50%);
   background: var(--secondary);
   color: white;
-  padding: 15px 30px;
+  padding: 12px 25px;
   border-radius: 8px;
   font-weight: 500;
   display: none;
@@ -469,20 +458,55 @@ header {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+/* Footer */
+.app-footer {
+  padding: 15px;
+  background: var(--secondary);
+  color: white;
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.footer-link {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition);
+}
+
+.footer-link:hover {
+  color: var(--accent);
+}
+
 /* Responsive */
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
   .week-table th {
-    font-size: 1rem;
-    padding: 14px 8px;
+    font-size: 0.95rem;
+    padding: 12px 8px;
   }
 
   .week-table td {
-    height: 85px;
+    height: 80px;
     padding: 8px;
   }
+}
 
-  .content-item {
-    padding: 8px;
+@media (max-width: 992px) {
+  .controls {
+    justify-content: center;
+  }
+  
+  .week-display {
+    order: 1;
+    width: 100%;
+    margin-top: 10px;
   }
 }
 
@@ -493,16 +517,22 @@ header {
 
   header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .logo h1 {
+    font-size: 1.5rem;
   }
 
   .controls {
-    width: 100%;
-    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .actions {
-    margin-top: 15px;
+    margin-top: 10px;
     width: 100%;
     justify-content: center;
   }
@@ -516,14 +546,14 @@ header {
   }
 
   .scrapbook-paper {
-    padding: 30px 20px;
+    padding: 20px;
   }
 }
 
 @media (max-width: 576px) {
   .form-row {
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
   }
 
   .form-group {
@@ -531,6 +561,39 @@ header {
   }
 
   .modal-header h3 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+@media print {
+  body {
+    background: none;
+    padding: 0;
+  }
+
+  .app-section {
+    box-shadow: none;
+    border: none;
+  }
+
+  header, .empty-state, .add-content-btn, .app-footer {
+    display: none !important;
+  }
+
+  .week-table td {
+    height: 60px;
+    page-break-inside: avoid;
+  }
+
+  .week-view {
+    padding: 0;
   }
 }
