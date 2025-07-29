@@ -22,8 +22,6 @@ const contentType = document.getElementById('contentType');
 const contentAudience = document.getElementById('contentAudience');
 const contentDescription = document.getElementById('contentDescription');
 const contentCaption = document.getElementById('contentCaption');
-const contentLink = document.getElementById('contentLink');
-const contentUpload = document.getElementById('contentUpload');
 const cancelBtn = document.getElementById('cancelBtn');
 const deleteBtn = document.getElementById('deleteBtn');
 const toast = document.getElementById('toast');
@@ -63,10 +61,12 @@ function setupEventListeners() {
   cancelBtn.addEventListener('click', closeContentModal);
   contentForm.addEventListener('submit', saveContent);
   deleteBtn.addEventListener('click', deleteContent);
-  contentUpload.addEventListener('change', handleFileUpload);
   contentModal.addEventListener('click', (e) => {
     if (e.target === contentModal) closeContentModal();
   });
+  
+  // Set default date to today
+  contentDate.valueAsDate = new Date();
 }
 
 // Render Calendar
@@ -78,11 +78,15 @@ function renderWeekView() {
   weekEnd.setDate(weekStart.getDate() + 6);
 
   weekDisplay.textContent = `Week of ${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
-  weekTable.innerHTML = '';
+  
+  // Clear existing table
+  const tbody = weekTable.querySelector('tbody');
+  if (tbody) {
+    weekTable.removeChild(tbody);
+  }
 
-  const thead = document.createElement('thead');
-  const headerRow = document.createElement('tr');
-  headerRow.innerHTML = '<th>Time</th>';
+  const thead = weekTable.querySelector('thead');
+  thead.innerHTML = '<tr><th>Time</th>';
 
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const currentDay = new Date(weekStart);
@@ -90,14 +94,11 @@ function renderWeekView() {
   for (let i = 0; i < 7; i++) {
     const th = document.createElement('th');
     th.innerHTML = `<div>${daysOfWeek[i]}</div><div>${formatShortDate(currentDay)}</div>`;
-    headerRow.appendChild(th);
+    thead.querySelector('tr').appendChild(th);
     currentDay.setDate(currentDay.getDate() + 1);
   }
 
-  thead.appendChild(headerRow);
-  weekTable.appendChild(thead);
-
-  const tbody = document.createElement('tbody');
+  const newTbody = document.createElement('tbody');
   let hasContent = false;
 
   timeSlots.forEach(time => {
@@ -115,7 +116,7 @@ function renderWeekView() {
       cell.dataset.time = time;
 
       const dateStr = formatDateForData(dayDate);
-      const content = contentItems.filter(item => item.date === dateStr && item.time === time);
+      const content = contentItems.filter(item => item.date === dateStr && item.time === convertTo24Hour(time));
 
       if (content.length > 0) {
         hasContent = true;
@@ -139,10 +140,10 @@ function renderWeekView() {
       dayDate.setDate(dayDate.getDate() + 1);
     }
 
-    tbody.appendChild(row);
+    newTbody.appendChild(row);
   });
 
-  weekTable.appendChild(tbody);
+  weekTable.appendChild(newTbody);
   emptyState.style.display = hasContent ? 'none' : 'flex';
 }
 
@@ -173,14 +174,8 @@ function openContentModal(date, time) {
   contentForm.reset();
   
   // Set default values
-  contentDate.value = formatDateForInput(date);
-  contentStartTime.value = convertTo24Hour(time);
-  
-  // Set current time if not provided
-  if (!time) {
-    const now = new Date();
-    contentStartTime.value = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-  }
+  contentDate.valueAsDate = date;
+  contentStartTime.value = convertTo24Hour(time) || '12:00';
   
   contentModal.style.display = 'flex';
 }
@@ -201,7 +196,6 @@ function openEditContentModal(contentId) {
   contentAudience.value = content.audience || 'Awareness';
   contentDescription.value = content.description || '';
   contentCaption.value = content.caption || '';
-  contentLink.value = content.link || '';
 
   contentModal.style.display = 'flex';
 }
@@ -223,7 +217,6 @@ function saveContent(e) {
     audience: contentAudience.value || 'Awareness',
     description: contentDescription.value || '',
     caption: contentCaption.value || '',
-    link: contentLink.value || '',
     createdAt: new Date().toISOString()
   };
 
@@ -252,13 +245,6 @@ function deleteContent() {
 }
 
 // Other Features
-function handleFileUpload(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  showToast(`File "${file.name}" uploaded successfully`);
-  contentUpload.value = '';
-}
-
 function changeWeek(direction) {
   currentDate.setDate(currentDate.getDate() + direction * 7);
   renderWeekView();
@@ -271,7 +257,7 @@ function goToToday() {
 
 function addSampleContent() {
   const platforms = ['Instagram', 'Facebook', 'Twitter', 'LinkedIn', 'YouTube'];
-  const types = ['Image Post', 'Video', 'Carousel', 'Story', 'Article'];
+  const types = ['Image', 'Video', 'Carousel', 'Story', 'Article'];
   const audiences = ['Awareness', 'Consideration', 'Decision', 'Retention'];
 
   for (let i = 0; i < 8; i++) {
@@ -282,7 +268,7 @@ function addSampleContent() {
       id: Date.now() + i,
       title: `Sample Content ${i + 1}`,
       date: formatDateForData(randomDate),
-      time: timeSlots[Math.floor(Math.random() * timeSlots.length)],
+      time: convertTo24Hour(timeSlots[Math.floor(Math.random() * timeSlots.length)]),
       platform: platforms[Math.floor(Math.random() * platforms.length)],
       type: types[Math.floor(Math.random() * types.length)],
       audience: audiences[Math.floor(Math.random() * audiences.length)],
@@ -307,6 +293,7 @@ function setupPWA() {
   window.addEventListener('appinstalled', () => {
     installBtn.style.display = 'none';
     deferredPrompt = null;
+    showToast('App installed successfully!');
   });
 }
 
@@ -328,7 +315,8 @@ function handlePrint() {
 }
 
 function exportAsPdf() {
-  showToast('PDF export is preparing...');
+  showToast('Exporting to PDF... (This is a demo)');
+  // In a real app, you would use a library like jsPDF or window.print() with PDF printing
 }
 
 function showToast(message) {
@@ -344,12 +332,13 @@ function formatDate(date) {
 }
 
 function formatShortDate(date) {
-  return formatDate(date);
+  return date.getDate();
 }
 
 function formatDateForData(date) {
   if (typeof date === 'string') return date;
-  return date.toISOString().split('T')[0];
+  const d = new Date(date);
+  return d.toISOString().split('T')[0];
 }
 
 function formatDateForInput(date) {
@@ -359,11 +348,20 @@ function formatDateForInput(date) {
 }
 
 function convertTo24Hour(time12h) {
-  if (!time12h || !time12h.includes(' ')) return time12h || '12:00';
+  if (!time12h) return '12:00';
+  if (!time12h.includes(' ')) return time12h; // Already in 24h format
+  
   const [time, modifier] = time12h.split(' ');
   let [hours, minutes] = time.split(':');
-  if (hours === '12') hours = '00';
-  if (modifier === 'PM') hours = parseInt(hours, 10) + 12;
+  
+  if (hours === '12') {
+    hours = '00';
+  }
+  
+  if (modifier === 'PM') {
+    hours = parseInt(hours, 10) + 12;
+  }
+  
   return `${hours}:${minutes}`;
 }
 
