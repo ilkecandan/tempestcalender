@@ -1,9 +1,10 @@
-const CACHE_NAME = 'tempest-planner-v1';
+const CACHE_NAME = 'tempest-planner-v2';
 const urlsToCache = [
   '/',
   '/index.html',
   '/styles.css',
   '/script.js',
+  '/manifest.json',
   '/images/background.webp',
   '/images/icon-192.png',
   '/images/icon-512.png'
