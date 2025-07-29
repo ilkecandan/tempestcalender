@@ -1,7 +1,7 @@
 {
   "name": "Tempest Content Planner",
   "short_name": "Tempest Planner",
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#2a9d8f",
   "theme_color": "#2a9d8f",
@@ -10,12 +10,22 @@
     {
       "src": "images/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "images/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
-  ]
+  ],
+  "orientation": "portrait",
+  "scope": "/"
 }
