@@ -6,11 +6,985 @@
   <meta name="description" content="Plan your content strategy with Tempest Labs' elegant scrapbook-style calendar"/>
   <title>Tempest Content Planner | Creative Content Calendar</title>
   <link rel="manifest" href="manifest.json"/>
-  <link rel="stylesheet" href="styles.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --primary: #2a9d8f;
+      --primary-dark: #1d7a6d;
+      --secondary: #264653;
+      --accent: #e9c46a;
+      --light: #f8f9fa;
+      --light-bg: rgba(255, 255, 255, 0.92);
+      --paper: #fffef7;
+      --paper-border: #e8e3d0;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+      --teal-light: #88c9bf;
+      --teal-medium: #4fb3a8;
+      --teal-dark: #2a9d8f;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --error: #f44336;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Raleway', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* App Section */
+    .app-section {
+      display: none;
+      background: var(--light-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--paper-border);
+    }
+
+    /* Header */
+    header {
+      padding: 20px 30px;
+      background: var(--secondary);
+      color: white;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(42, 157, 143, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(42, 157, 143, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px 15px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-today {
+      background: var(--accent);
+      color: var(--secondary);
+    }
+
+    .btn-today:hover {
+      background: #e0b351;
+      transform: translateY(-2px);
+    }
+
+    .btn-export {
+      background: var(--teal-medium);
+      color: white;
+    }
+
+    .btn-export:hover {
+      background: var(--teal-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-install {
+      background: var(--accent);
+      color: var(--secondary);
+    }
+
+    .btn-install:hover {
+      background: #e0b351;
+      transform: translateY(-2px);
+    }
+
+    .week-display {
+      font-size: 1.1rem;
+      font-weight: 500;
+      min-width: 250px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 8px 20px;
+      border-radius: 30px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-left: 10px;
+    }
+
+    /* Week View */
+    .week-view {
+      padding: 20px;
+      min-height: 600px;
+    }
+
+    .week-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      background: var(--paper);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .week-table th {
+      background: var(--primary);
+      color: white;
+      padding: 15px 10px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+    }
+
+    .week-table th:first-child {
+      width: 100px;
+    }
+
+    .week-table td {
+      padding: 10px;
+      border: 1px solid var(--paper-border);
+      vertical-align: top;
+      height: 90px;
+      transition: var(--transition);
+      position: relative;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .week-table td:hover {
+      background: rgba(255, 253, 245, 0.9);
+      transform: scale(1.01);
+      z-index: 2;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .time-slot {
+      text-align: center;
+      font-weight: 500;
+      color: var(--secondary);
+      background: rgba(136, 201, 191, 0.15);
+    }
+
+    .content-cell {
+      cursor: pointer;
+      position: relative;
+    }
+
+    .add-content-btn {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      color: var(--secondary);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: var(--transition);
+      font-size: 16px;
+    }
+
+    .content-cell:hover .add-content-btn {
+      opacity: 1;
+    }
+
+    .content-item {
+      background: white;
+      border-radius: 6px;
+      padding: 8px;
+      margin-bottom: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      border-left: 3px solid var(--primary);
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .content-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      color: var(--secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .content-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      font-size: 0.75rem;
+      color: #666;
+    }
+
+    .content-tag {
+      background: rgba(136, 201, 191, 0.2);
+      padding: 2px 6px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      white-space: nowrap;
+    }
+
+    /* Empty State */
+    .empty-state {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+      padding: 30px;
+    }
+
+    .scrapbook-paper {
+      background: var(--paper);
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--paper-border);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .scrapbook-paper i {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 15px;
+    }
+
+    .scrapbook-paper h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+      color: var(--secondary);
+    }
+
+    .scrapbook-paper p {
+      margin-bottom: 20px;
+      color: #666;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 25px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--secondary);
+    }
+
+    .modal-header button {
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #777;
+      transition: var(--transition);
+    }
+
+    .modal-header button:hover {
+      color: var(--primary);
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .form-group.full-width {
+      flex: 0 0 100%;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: var(--secondary);
+    }
+
+    .form-group select,
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: white;
+      transition: var(--transition);
+      font-family: 'Raleway', sans-serif;
+    }
+
+    .form-group select:focus,
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--teal-medium);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.2);
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn-danger {
+      background: #e76f51;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #d45c3f;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--secondary);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-weight: 500;
+      display: none;
+      z-index: 1001;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Footer */
+    .app-footer {
+      padding: 15px;
+      background: var(--secondary);
+      color: white;
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .footer-link {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--accent);
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .week-table th {
+        font-size: 0.95rem;
+        padding: 12px 8px;
+      }
+
+      .week-table td {
+        height: 80px;
+        padding: 8px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .controls {
+        justify-content: center;
+      }
+      
+      .week-display {
+        order: 1;
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+        padding: 15px;
+      }
+
+      .logo h1 {
+        font-size: 1.5rem;
+      }
+
+      .controls {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .actions {
+        margin-top: 10px;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .week-view {
+        padding: 15px;
+      }
+
+      .week-table th:first-child {
+        width: 70px;
+      }
+
+      .scrapbook-paper {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .form-row {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .form-group {
+        min-width: 100%;
+      }
+
+      .modal-header h3 {
+        font-size: 1.4rem;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+      }
+
+      .app-section {
+        box-shadow: none;
+        border: none;
+      }
+
+      header, .empty-state, .add-content-btn, .app-footer {
+        display: none !important;
+      }
+
+      .week-table td {
+        height: 60px;
+        page-break-inside: avoid;
+      }
+
+      .week-view {
+        padding: 0;
+      }
+    }
+
+    /* New styles for the tutorial section */
+    .tutorial-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+    }
+
+    .tutorial-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: var(--transition);
+    }
+
+    .tutorial-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .tutorial-content {
+      display: none;
+      position: absolute;
+      bottom: 60px;
+      right: 0;
+      width: 300px;
+      background: var(--paper);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--paper-border);
+    }
+
+    .tutorial-content h3 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 15px;
+      color: var(--secondary);
+    }
+
+    .tutorial-content p {
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .tutorial-content ul {
+      padding-left: 20px;
+      margin-bottom: 15px;
+    }
+
+    .tutorial-content li {
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .tutorial-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #777;
+    }
+
+    /* Quick Add Panel */
+    .quick-add-panel {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--paper);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--paper-border);
+      z-index: 1000;
+      display: none;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .quick-add-panel h3 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 15px;
+      color: var(--secondary);
+    }
+
+    .quick-add-panel .form-group {
+      margin-bottom: 15px;
+    }
+
+    .quick-add-panel .form-actions {
+      margin-top: 15px;
+    }
+
+    /* Content Preview */
+    .content-preview {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--paper);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--paper-border);
+      z-index: 1000;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .content-preview h3 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 15px;
+      color: var(--secondary);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 10px;
+    }
+
+    .preview-item {
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .preview-item:last-child {
+      border-bottom: none;
+    }
+
+    .preview-item h4 {
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+
+    .preview-item p {
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+
+    .preview-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .preview-tag {
+      background: rgba(136, 201, 191, 0.2);
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      color: #555;
+    }
+
+    .close-preview {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #777;
+    }
+
+    /* New styles for usability improvements */
+    .selected-cell {
+      background-color: rgba(233, 196, 106, 0.2) !important;
+      box-shadow: 0 0 0 2px var(--accent) inset;
+    }
+
+    .date-time-display {
+      background: rgba(136, 201, 191, 0.1);
+      padding: 10px 15px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .date-time-display i {
+      color: var(--primary);
+    }
+
+    .form-section {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .form-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-section-title i {
+      color: var(--primary);
+    }
+
+    .required-field::after {
+      content: "*";
+      color: var(--error);
+      margin-left: 3px;
+    }
+
+    .drag-handle {
+      cursor: move;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      opacity: 0.3;
+      transition: var(--transition);
+    }
+
+    .content-item:hover .drag-handle {
+      opacity: 0.7;
+    }
+
+    .cell-content-count {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      background: var(--primary);
+      color: white;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cell-highlight {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(42, 157, 143, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(42, 157, 143, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(42, 157, 143, 0); }
+    }
+
+    .empty-cell-hint {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #aaa;
+      font-size: 0.8rem;
+      text-align: center;
+      width: 100%;
+      padding: 0 10px;
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .content-cell:hover .empty-cell-hint {
+      opacity: 1;
+    }
+
+    .platform-color-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--primary);
+    }
+
+    /* Platform-specific colors */
+    .platform-instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .platform-facebook { background: #3b5998; }
+    .platform-twitter { background: #1da1f2; }
+    .platform-linkedin { background: #0077b5; }
+    .platform-youtube { background: #ff0000; }
+    .platform-tiktok { background: #000000; }
+    .platform-pinterest { background: #bd081c; }
+    .platform-blog { background: #6b6b6b; }
+    .platform-email { background: #ea4335; }
+
+    /* Loading spinner */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Navigation improvements */
+    .week-navigation {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .week-selector {
+      padding: 8px 15px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: white;
+      font-family: 'Raleway', sans-serif;
+    }
+
+    /* Content filtering */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+      align-items: center;
+    }
+
+    .filter-select {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: white;
+      font-family: 'Raleway', sans-serif;
+      min-width: 150px;
+    }
+
+    .clear-filters {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: 0.9rem;
+    }
+
+    /* Content item improvements */
+    .content-item.dragging {
+      opacity: 0.7;
+      transform: rotate(5deg);
+    }
+
+    .content-item-placeholder {
+      background: rgba(233, 196, 106, 0.2);
+      border: 2px dashed var(--accent);
+      border-radius: 6px;
+      height: 60px;
+      margin-bottom: 5px;
+    }
+  </style>
 </head>
 <body>
   <div class="app-container">
@@ -40,9 +1014,43 @@
             <button class="btn btn-install" id="installBtn" style="display: none;">
               <i class="fas fa-download"></i> Install App
             </button>
+            <button class="btn btn-primary" id="quickAddBtn">
+              <i class="fas fa-plus"></i> Quick Add
+            </button>
+            <button class="btn btn-secondary" id="viewContentBtn">
+              <i class="fas fa-eye"></i> View All
+            </button>
           </div>
         </div>
       </header>
+
+      <div class="filter-bar" id="filterBar">
+        <select class="filter-select" id="platformFilter">
+          <option value="">All Platforms</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Twitter">Twitter</option>
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="TikTok">TikTok</option>
+          <option value="YouTube">YouTube</option>
+          <option value="Pinterest">Pinterest</option>
+          <option value="Blog">Blog</option>
+          <option value="Email">Email</option>
+        </select>
+        <select class="filter-select" id="typeFilter">
+          <option value="">All Types</option>
+          <option value="Image">Image Post</option>
+          <option value="Video">Video</option>
+          <option value="Carousel">Carousel</option>
+          <option value="Story">Story</option>
+          <option value="Reel">Reel</option>
+          <option value="Live">Live Stream</option>
+          <option value="Article">Article</option>
+          <option value="Poll">Poll</option>
+          <option value="Guide">Guide</option>
+        </select>
+        <button class="clear-filters" id="clearFiltersBtn">Clear Filters</button>
+      </div>
 
       <div class="week-view">
         <table class="week-table" id="weekTable">
@@ -57,7 +1065,7 @@
         <div class="scrapbook-paper">
           <i class="fas fa-calendar-plus"></i>
           <h3>Your week is looking empty</h3>
-          <p>Click on a time slot to add content</p>
+          <p>Click on a time slot to add content or use the Quick Add button</p>
           <button class="btn btn-primary" id="addSampleContentBtn">
             <i class="fas fa-magic"></i> Add Sample Content
           </button>
@@ -84,92 +1092,933 @@
         <h3 id="modalTitle">Add Content</h3>
         <button id="closeModal">&times;</button>
       </div>
+      
+      <div class="date-time-display" id="dateTimeDisplay">
+        <i class="fas fa-calendar-day"></i>
+        <span id="selectedDate"></span>
+        <i class="fas fa-clock"></i>
+        <span id="selectedTime"></span>
+      </div>
+      
       <form id="contentForm">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Content Title</label>
-            <input type="text" id="contentTitle" required>
+        <div class="form-section">
+          <div class="form-section-title">
+            <i class="fas fa-info-circle"></i>
+            <span>Basic Information</span>
           </div>
-          <div class="form-group">
-            <label>Date</label>
-            <input type="date" id="contentDate" required>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="required-field">Content Title</label>
+              <input type="text" id="contentTitle" required placeholder="Give your content a title">
+            </div>
+            <div class="form-group">
+              <label class="required-field">Platform</label>
+              <select id="contentPlatform" required>
+                <option value="Instagram">Instagram</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Twitter">Twitter</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="TikTok">TikTok</option>
+                <option value="YouTube">YouTube</option>
+                <option value="Pinterest">Pinterest</option>
+                <option value="Blog">Blog</option>
+                <option value="Email">Email Newsletter</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="required-field">Content Type</label>
+              <select id="contentType" required>
+                <option value="Image">Image Post</option>
+                <option value="Video">Video</option>
+                <option value="Carousel">Carousel</option>
+                <option value="Story">Story</option>
+                <option value="Reel">Reel</option>
+                <option value="Live">Live Stream</option>
+                <option value="Article">Article</option>
+                <option value="Poll">Poll</option>
+                <option value="Guide">Guide</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Audience Stage</label>
+              <select id="contentAudience">
+                <option value="">Not specified</option>
+                <option value="Awareness">Awareness</option>
+                <option value="Consideration">Consideration</option>
+                <option value="Decision">Decision</option>
+                <option value="Retention">Retention</option>
+                <option value="Advocacy">Advocacy</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Time</label>
-            <input type="time" id="contentStartTime" required>
+        <div class="form-section">
+          <div class="form-section-title">
+            <i class="fas fa-align-left"></i>
+            <span>Content Details</span>
           </div>
-          <div class="form-group">
-            <label>Platform</label>
-            <select id="contentPlatform" required>
-              <option value="Instagram">Instagram</option>
-              <option value="Facebook">Facebook</option>
-              <option value="Twitter">Twitter</option>
-              <option value="LinkedIn">LinkedIn</option>
-              <option value="TikTok">TikTok</option>
-              <option value="YouTube">YouTube</option>
-              <option value="Pinterest">Pinterest</option>
-              <option value="Blog">Blog</option>
-              <option value="Email">Email Newsletter</option>
-            </select>
+          
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label>Description</label>
+              <textarea id="contentDescription" rows="2" placeholder="What's this content about? (Optional)"></textarea>
+            </div>
           </div>
-        </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Content Type</label>
-            <select id="contentType" required>
-              <option value="Image">Image Post</option>
-              <option value="Video">Video</option>
-              <option value="Carousel">Carousel</option>
-              <option value="Story">Story</option>
-              <option value="Reel">Reel</option>
-              <option value="Live">Live Stream</option>
-              <option value="Article">Article</option>
-              <option value="Poll">Poll</option>
-              <option value="Guide">Guide</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Audience Stage</label>
-            <select id="contentAudience" required>
-              <option value="Awareness">Awareness</option>
-              <option value="Consideration">Consideration</option>
-              <option value="Decision">Decision</option>
-              <option value="Retention">Retention</option>
-              <option value="Advocacy">Advocacy</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group full-width">
-            <label>Description</label>
-            <textarea id="contentDescription" rows="2" placeholder="What's this content about?" required></textarea>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group full-width">
-            <label>Caption / Key Message</label>
-            <textarea id="contentCaption" rows="3" placeholder="Write your caption here..." required></textarea>
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label>Caption / Key Message</label>
+              <textarea id="contentCaption" rows="3" placeholder="Write your caption here... (Optional)"></textarea>
+            </div>
           </div>
         </div>
 
         <div class="form-actions">
           <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Content</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">
+            <span id="saveBtnText">Save Content</span>
+            <span id="saveBtnSpinner" class="loading" style="display: none;"></span>
+          </button>
           <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- Quick Add Panel -->
+  <div class="quick-add-panel" id="quickAddPanel">
+    <h3>Quick Add Content</h3>
+    <form id="quickAddForm">
+      <div class="form-group">
+        <label>Content Title *</label>
+        <input type="text" id="quickTitle" required placeholder="Give your content a title">
+      </div>
+      <div class="form-group">
+        <label>Platform *</label>
+        <select id="quickPlatform" required>
+          <option value="Instagram">Instagram</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Twitter">Twitter</option>
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="TikTok">TikTok</option>
+          <option value="YouTube">YouTube</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Content Type *</label>
+        <select id="quickType" required>
+          <option value="Image">Image Post</option>
+          <option value="Video">Video</option>
+          <option value="Carousel">Carousel</option>
+          <option value="Story">Story</option>
+          <option value="Reel">Reel</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" id="closeQuickAddBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Content</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Content Preview Panel -->
+  <div class="content-preview" id="contentPreview">
+    <button class="close-preview" id="closePreviewBtn">&times;</button>
+    <h3>Your Content Plan</h3>
+    <div id="previewContent"></div>
+  </div>
+
+  <!-- Tutorial Container -->
+  <div class="tutorial-container">
+    <div class="tutorial-btn" id="tutorialBtn">
+      <i class="fas fa-question"></i>
+    </div>
+    <div class="tutorial-content" id="tutorialContent">
+      <button class="tutorial-close" id="closeTutorialBtn">&times;</button>
+      <h3>How to Use This App</h3>
+      <p>Welcome to the Tempest Content Planner! Here's how to get started:</p>
+      <ul>
+        <li><strong>Add content</strong> by clicking on any time slot or using the Quick Add button</li>
+        <li><strong>Navigate weeks</strong> using the arrow buttons or Today button</li>
+        <li><strong>Edit content</strong> by clicking on any content item</li>
+        <li><strong>View all content</strong> using the "View All" button</li>
+        <li><strong>Print or export</strong> your content plan using the buttons in the header</li>
+        <li><strong>Filter content</strong> by platform or content type using the filter dropdowns</li>
+        <li><strong>Drag and drop</strong> content items to reschedule them</li>
+      </ul>
+      <p>Only title, platform and content type are required fields.</p>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div class="toast" id="toast"></div>
 
-  <script src="script.js"></script>
+  <script>
+    // DOM Elements
+    const appSection = document.getElementById('appSection');
+    const weekDisplay = document.getElementById('weekDisplay');
+    const weekTable = document.getElementById('weekTable');
+    const prevWeekBtn = document.getElementById('prevWeekBtn');
+    const nextWeekBtn = document.getElementById('nextWeekBtn');
+    const todayBtn = document.getElementById('todayBtn');
+    const printBtn = document.getElementById('printBtn');
+    const exportPdfBtn = document.getElementById('exportPdfBtn');
+    const installBtn = document.getElementById('installBtn');
+    const emptyState = document.getElementById('emptyState');
+    const addSampleContentBtn = document.getElementById('addSampleContentBtn');
+    const contentModal = document.getElementById('contentModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const contentForm = document.getElementById('contentForm');
+    const contentTitle = document.getElementById('contentTitle');
+    const contentPlatform = document.getElementById('contentPlatform');
+    const contentType = document.getElementById('contentType');
+    const contentAudience = document.getElementById('contentAudience');
+    const contentDescription = document.getElementById('contentDescription');
+    const contentCaption = document.getElementById('contentCaption');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const deleteBtn = document.getElementById('deleteBtn');
+    const toast = document.getElementById('toast');
+    const quickAddBtn = document.getElementById('quickAddBtn');
+    const quickAddPanel = document.getElementById('quickAddPanel');
+    const quickAddForm = document.getElementById('quickAddForm');
+    const closeQuickAddBtn = document.getElementById('closeQuickAddBtn');
+    const viewContentBtn = document.getElementById('viewContentBtn');
+    const contentPreview = document.getElementById('contentPreview');
+    const closePreviewBtn = document.getElementById('closePreviewBtn');
+    const previewContent = document.getElementById('previewContent');
+    const tutorialBtn = document.getElementById('tutorialBtn');
+    const tutorialContent = document.getElementById('tutorialContent');
+    const closeTutorialBtn = document.getElementById('closeTutorialBtn');
+    const dateTimeDisplay = document.getElementById('dateTimeDisplay');
+    const selectedDate = document.getElementById('selectedDate');
+    const selectedTime = document.getElementById('selectedTime');
+    const saveBtn = document.getElementById('saveBtn');
+    const saveBtnText = document.getElementById('saveBtnText');
+    const saveBtnSpinner = document.getElementById('saveBtnSpinner');
+    const platformFilter = document.getElementById('platformFilter');
+    const typeFilter = document.getElementById('typeFilter');
+    const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+    const filterBar = document.getElementById('filterBar');
+
+    // App State
+    let currentDate = new Date();
+    let contentItems = [];
+    let editingContentId = null;
+    let deferredPrompt = null;
+    let selectedCellDate = null;
+    let selectedCellTime = null;
+    let draggedItem = null;
+    let dragSourceCell = null;
+
+    // Time slots for the table
+    const timeSlots = [
+      '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
+      '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM',
+      '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM'
+    ];
+
+    // Initialize App
+    function initApp() {
+      loadContent();
+      setupEventListeners();
+      setupPWA();
+      setupDragAndDrop();
+      appSection.style.display = 'block';
+      renderWeekView();
+      
+      // Show tutorial on first visit
+      const hasSeenTutorial = localStorage.getItem('hasSeenTutorial');
+      if (!hasSeenTutorial) {
+        setTimeout(() => {
+          tutorialContent.style.display = 'block';
+          localStorage.setItem('hasSeenTutorial', 'true');
+        }, 2000);
+      }
+    }
+
+    // Event Listeners
+    function setupEventListeners() {
+      prevWeekBtn.addEventListener('click', () => changeWeek(-1));
+      nextWeekBtn.addEventListener('click', () => changeWeek(1));
+      todayBtn.addEventListener('click', goToToday);
+      printBtn.addEventListener('click', handlePrint);
+      exportPdfBtn.addEventListener('click', exportAsPdf);
+      installBtn.addEventListener('click', installPWA);
+      addSampleContentBtn.addEventListener('click', addSampleContent);
+      closeModal.addEventListener('click', closeContentModal);
+      cancelBtn.addEventListener('click', closeContentModal);
+      contentForm.addEventListener('submit', saveContent);
+      deleteBtn.addEventListener('click', deleteContent);
+      contentModal.addEventListener('click', (e) => {
+        if (e.target === contentModal) closeContentModal();
+      });
+      
+      // Quick add functionality
+      quickAddBtn.addEventListener('click', openQuickAddPanel);
+      closeQuickAddBtn.addEventListener('click', closeQuickAddPanel);
+      quickAddForm.addEventListener('submit', handleQuickAdd);
+      
+      // View content functionality
+      viewContentBtn.addEventListener('click', showContentPreview);
+      closePreviewBtn.addEventListener('click', closeContentPreview);
+      
+      // Tutorial functionality
+      tutorialBtn.addEventListener('click', toggleTutorial);
+      closeTutorialBtn.addEventListener('click', closeTutorial);
+      
+      // Filter functionality
+      platformFilter.addEventListener('change', applyFilters);
+      typeFilter.addEventListener('change', applyFilters);
+      clearFiltersBtn.addEventListener('click', clearFilters);
+      
+      // Close panels when clicking outside
+      document.addEventListener('click', (e) => {
+        if (quickAddPanel.style.display === 'block' && !quickAddPanel.contains(e.target) && e.target !== quickAddBtn) {
+          closeQuickAddPanel();
+        }
+        if (contentPreview.style.display === 'block' && !contentPreview.contains(e.target) && e.target !== viewContentBtn) {
+          closeContentPreview();
+        }
+        if (tutorialContent.style.display === 'block' && !tutorialContent.contains(e.target) && e.target !== tutorialBtn) {
+          closeTutorial();
+        }
+      });
+    }
+
+    // Setup drag and drop functionality
+    function setupDragAndDrop() {
+      document.addEventListener('dragstart', (e) => {
+        if (e.target.classList.contains('content-item')) {
+          draggedItem = e.target;
+          dragSourceCell = e.target.closest('.content-cell');
+          e.target.classList.add('dragging');
+          e.dataTransfer.setData('text/plain', e.target.dataset.id);
+          e.dataTransfer.effectAllowed = 'move';
+        }
+      });
+
+      document.addEventListener('dragend', (e) => {
+        if (e.target.classList.contains('content-item')) {
+          e.target.classList.remove('dragging');
+          draggedItem = null;
+          dragSourceCell = null;
+        }
+      });
+
+      document.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (draggedItem) {
+          e.dataTransfer.dropEffect = 'move';
+        }
+      });
+
+      document.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (draggedItem && e.target.classList.contains('content-cell')) {
+          const contentId = parseInt(e.dataTransfer.getData('text/plain'));
+          const targetCell = e.target;
+          const targetDate = targetCell.dataset.date;
+          const targetTime = convertTo24Hour(targetCell.dataset.time);
+          
+          // Update the content item with new date and time
+          const contentIndex = contentItems.findIndex(item => item.id === contentId);
+          if (contentIndex !== -1) {
+            contentItems[contentIndex].date = targetDate;
+            contentItems[contentIndex].time = targetTime;
+            saveContentToStorage();
+            renderWeekView();
+            showToast('Content moved successfully');
+          }
+        }
+      });
+    }
+
+    // Render Calendar
+    function renderWeekView() {
+      const weekStart = new Date(currentDate);
+      weekStart.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1));
+
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+
+      weekDisplay.textContent = `Week of ${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
+      
+      // Clear existing table
+      const tbody = weekTable.querySelector('tbody');
+      if (tbody) {
+        weekTable.removeChild(tbody);
+      }
+
+      const thead = weekTable.querySelector('thead');
+      thead.innerHTML = '<tr><th>Time</th>';
+
+      const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      const currentDay = new Date(weekStart);
+
+      for (let i = 0; i < 7; i++) {
+        const th = document.createElement('th');
+        th.innerHTML = `<div>${daysOfWeek[i]}</div><div>${formatShortDate(currentDay)}</div>`;
+        thead.querySelector('tr').appendChild(th);
+        currentDay.setDate(currentDay.getDate() + 1);
+      }
+
+      const newTbody = document.createElement('tbody');
+      let hasContent = false;
+
+      timeSlots.forEach(time => {
+        const row = document.createElement('tr');
+        const timeCell = document.createElement('td');
+        timeCell.className = 'time-slot';
+        timeCell.textContent = time;
+        row.appendChild(timeCell);
+
+        const dayDate = new Date(weekStart);
+        for (let i = 0; i < 7; i++) {
+          const cell = document.createElement('td');
+          cell.className = 'content-cell';
+          cell.dataset.date = formatDateForData(dayDate);
+          cell.dataset.time = time;
+          cell.setAttribute('draggable', 'false');
+
+          const dateStr = formatDateForData(dayDate);
+          let contentForCell = contentItems.filter(item => item.date === dateStr && item.time === convertTo24Hour(time));
+
+          // Apply filters if any
+          const platformFilterValue = platformFilter.value;
+          const typeFilterValue = typeFilter.value;
+          
+          if (platformFilterValue) {
+            contentForCell = contentForCell.filter(item => item.platform === platformFilterValue);
+          }
+          
+          if (typeFilterValue) {
+            contentForCell = contentForCell.filter(item => item.type === typeFilterValue);
+          }
+
+          // Add content count badge
+          if (contentForCell.length > 0) {
+            hasContent = true;
+            const countBadge = document.createElement('span');
+            countBadge.className = 'cell-content-count';
+            countBadge.textContent = contentForCell.length;
+            cell.appendChild(countBadge);
+          }
+
+          // Add empty cell hint
+          const emptyHint = document.createElement('div');
+          emptyHint.className = 'empty-cell-hint';
+          emptyHint.innerHTML = '<i class="fas fa-plus-circle"></i><br>Click to add content';
+          cell.appendChild(emptyHint);
+
+          if (contentForCell.length > 0) {
+            contentForCell.forEach(item => {
+              const contentEl = createContentElement(item);
+              cell.appendChild(contentEl);
+            });
+          }
+
+          const addBtn = document.createElement('button');
+          addBtn.className = 'add-content-btn';
+          addBtn.innerHTML = '+';
+          addBtn.onclick = (e) => {
+            e.stopPropagation();
+            openContentModal(dayDate, time);
+          };
+
+          cell.appendChild(addBtn);
+          cell.onclick = () => openContentModal(dayDate, time);
+          row.appendChild(cell);
+          dayDate.setDate(dayDate.getDate() + 1);
+        }
+
+        newTbody.appendChild(row);
+      });
+
+      weekTable.appendChild(newTbody);
+      emptyState.style.display = hasContent ? 'none' : 'flex';
+    }
+
+    // Load & Save
+    function loadContent() {
+      try {
+        const data = localStorage.getItem('contentCalendarData');
+        contentItems = data ? JSON.parse(data) : [];
+        
+        // Migrate old data format if needed
+        if (contentItems.length > 0 && !contentItems[0].id) {
+          contentItems = contentItems.map(item => ({
+            ...item,
+            id: Date.now() + Math.floor(Math.random() * 1000)
+          }));
+          saveContentToStorage();
+        }
+      } catch (e) {
+        console.error('Error loading content:', e);
+        contentItems = [];
+      }
+    }
+
+    function saveContentToStorage() {
+      try {
+        localStorage.setItem('contentCalendarData', JSON.stringify(contentItems));
+      } catch (e) {
+        console.error('Error saving content:', e);
+        showToast('Error saving content. Local storage might be full.');
+      }
+    }
+
+    // Content Modal
+    function openContentModal(date, time) {
+      editingContentId = null;
+      modalTitle.textContent = 'Add Content';
+      deleteBtn.style.display = 'none';
+      contentForm.reset();
+      
+      // Store selected cell info
+      selectedCellDate = date;
+      selectedCellTime = time;
+      
+      // Update date/time display
+      selectedDate.textContent = formatDate(date);
+      selectedTime.textContent = time;
+      dateTimeDisplay.style.display = 'flex';
+      
+      contentModal.style.display = 'flex';
+      
+      // Highlight the selected cell
+      highlightSelectedCell(date, time);
+    }
+
+    function highlightSelectedCell(date, time) {
+      // Remove any existing highlights
+      const cells = document.querySelectorAll('.content-cell');
+      cells.forEach(cell => cell.classList.remove('selected-cell'));
+      
+      // Find and highlight the selected cell
+      const dateStr = formatDateForData(date);
+      const targetCell = document.querySelector(`.content-cell[data-date="${dateStr}"][data-time="${time}"]`);
+      if (targetCell) {
+        targetCell.classList.add('selected-cell');
+        targetCell.classList.add('cell-highlight');
+        setTimeout(() => {
+          targetCell.classList.remove('cell-highlight');
+        }, 2000);
+      }
+    }
+
+    function openEditContentModal(contentId) {
+      const content = contentItems.find(item => item.id === contentId);
+      if (!content) return;
+
+      editingContentId = contentId;
+      modalTitle.textContent = 'Edit Content';
+      deleteBtn.style.display = 'block';
+
+      contentTitle.value = content.title || '';
+      contentPlatform.value = content.platform || 'Instagram';
+      contentType.value = content.type || 'Image';
+      contentAudience.value = content.audience || '';
+      contentDescription.value = content.description || '';
+      contentCaption.value = content.caption || '';
+
+      // Update date/time display
+      const contentDate = new Date(content.date);
+      selectedDate.textContent = formatDate(contentDate);
+      selectedTime.textContent = convertTo12Hour(content.time);
+      dateTimeDisplay.style.display = 'flex';
+      
+      // Highlight the cell containing this content
+      highlightSelectedCell(contentDate, convertTo12Hour(content.time));
+      
+      contentModal.style.display = 'flex';
+    }
+
+    function closeContentModal() {
+      contentModal.style.display = 'none';
+      
+      // Remove cell highlighting
+      const cells = document.querySelectorAll('.content-cell');
+      cells.forEach(cell => cell.classList.remove('selected-cell'));
+    }
+
+    function saveContent(e) {
+      e.preventDefault();
+      
+      // Show loading state
+      saveBtnText.style.display = 'none';
+      saveBtnSpinner.style.display = 'inline-block';
+      saveBtn.disabled = true;
+
+      // Simulate network delay for better UX feedback
+      setTimeout(() => {
+        const content = {
+          id: editingContentId || Date.now(),
+          title: contentTitle.value || 'Untitled Content',
+          date: formatDateForData(selectedCellDate),
+          time: convertTo24Hour(selectedCellTime) || '12:00',
+          platform: contentPlatform.value || 'Instagram',
+          type: contentType.value || 'Image',
+          audience: contentAudience.value || '',
+          description: contentDescription.value || '',
+          caption: contentCaption.value || '',
+          createdAt: new Date().toISOString()
+        };
+
+        if (editingContentId) {
+          contentItems = contentItems.map(item => item.id === editingContentId ? content : item);
+        } else {
+          contentItems.push(content);
+        }
+
+        saveContentToStorage();
+        renderWeekView();
+        closeContentModal();
+        showToast('Content saved successfully');
+        
+        // Reset button state
+        saveBtnText.style.display = 'inline-block';
+        saveBtnSpinner.style.display = 'none';
+        saveBtn.disabled = false;
+      }, 500);
+    }
+
+    function deleteContent() {
+      if (!editingContentId) return;
+
+      if (confirm('Are you sure you want to delete this content?')) {
+        contentItems = contentItems.filter(item => item.id !== editingContentId);
+        saveContentToStorage();
+        renderWeekView();
+        closeContentModal();
+        showToast('Content deleted');
+      }
+    }
+
+    // Quick Add Panel
+    function openQuickAddPanel() {
+      quickAddPanel.style.display = 'block';
+      quickAddForm.reset();
+    }
+
+    function closeQuickAddPanel() {
+      quickAddPanel.style.display = 'none';
+    }
+
+    function handleQuickAdd(e) {
+      e.preventDefault();
+      
+      const title = document.getElementById('quickTitle').value;
+      const platform = document.getElementById('quickPlatform').value;
+      const type = document.getElementById('quickType').value;
+      
+      if (!title) {
+        showToast('Please enter a title');
+        return;
+      }
+      
+      // Find the next available slot (today, next available time)
+      const today = new Date();
+      const nextHour = today.getHours() + 1;
+      const timeString = `${nextHour}:00`;
+      
+      const content = {
+        id: Date.now(),
+        title: title,
+        date: formatDateForInput(today),
+        time: convertTo24Hour(timeString) || '12:00',
+        platform: platform,
+        type: type,
+        audience: '',
+        description: '',
+        caption: '',
+        createdAt: new Date().toISOString()
+      };
+      
+      contentItems.push(content);
+      saveContentToStorage();
+      renderWeekView();
+      closeQuickAddPanel();
+      showToast('Content added successfully');
+      
+      // Navigate to current week if not already there
+      currentDate = new Date();
+      renderWeekView();
+    }
+
+    // Content Preview
+    function showContentPreview() {
+      if (contentItems.length === 0) {
+        showToast('No content to display');
+        return;
+      }
+      
+      // Sort content by date and time
+      const sortedContent = [...contentItems].sort((a, b) => {
+        const dateA = new Date(`${a.date}T${a.time}`);
+        const dateB = new Date(`${b.date}T${b.time}`);
+        return dateA - dateB;
+      });
+      
+      // Group content by date
+      const contentByDate = {};
+      sortedContent.forEach(item => {
+        if (!contentByDate[item.date]) {
+          contentByDate[item.date] = [];
+        }
+        contentByDate[item.date].push(item);
+      });
+      
+      // Generate preview HTML
+      let previewHTML = '';
+      
+      Object.keys(contentByDate).sort().forEach(date => {
+        previewHTML += `<div class="preview-item">
+          <h4>${formatDate(new Date(date))}</h4>`;
+        
+        contentByDate[date].forEach(item => {
+          const time = convertTo12Hour(item.time);
+          previewHTML += `
+            <div class="preview-item">
+              <p><strong>${time}</strong>: ${item.title}</p>
+              <div class="preview-meta">
+                <span class="preview-tag">${item.platform}</span>
+                <span class="preview-tag">${item.type}</span>
+                ${item.audience ? `<span class="preview-tag">${item.audience}</span>` : ''}
+              </div>
+            </div>
+          `;
+        });
+        
+        previewHTML += `</div>`;
+      });
+      
+      previewContent.innerHTML = previewHTML;
+      contentPreview.style.display = 'block';
+    }
+
+    function closeContentPreview() {
+      contentPreview.style.display = 'none';
+    }
+
+    // Tutorial
+    function toggleTutorial() {
+      tutorialContent.style.display = tutorialContent.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function closeTutorial() {
+      tutorialContent.style.display = 'none';
+    }
+
+    // Filter functionality
+    function applyFilters() {
+      renderWeekView();
+      
+      // Show if filters are active
+      if (platformFilter.value || typeFilter.value) {
+        filterBar.style.backgroundColor = 'rgba(233, 196, 106, 0.1)';
+        filterBar.style.padding = '10px';
+        filterBar.style.borderRadius = '6px';
+      } else {
+        filterBar.style.backgroundColor = 'transparent';
+        filterBar.style.padding = '0';
+      }
+    }
+
+    function clearFilters() {
+      platformFilter.value = '';
+      typeFilter.value = '';
+      applyFilters();
+      showToast('Filters cleared');
+    }
+
+    // Other Features
+    function changeWeek(direction) {
+      currentDate.setDate(currentDate.getDate() + direction * 7);
+      renderWeekView();
+    }
+
+    function goToToday() {
+      currentDate = new Date();
+      renderWeekView();
+      showToast('Navigated to current week');
+    }
+
+    function addSampleContent() {
+      const platforms = ['Instagram', 'Facebook', 'Twitter', 'LinkedIn', 'YouTube'];
+      const types = ['Image', 'Video', 'Carousel', 'Story', 'Article'];
+      const audiences = ['Awareness', 'Consideration', 'Decision', 'Retention'];
+
+      for (let i = 0; i < 8; i++) {
+        const randomDate = new Date();
+        randomDate.setDate(randomDate.getDate() + Math.floor(Math.random() * 14));
+
+        contentItems.push({
+          id: Date.now() + i,
+          title: `Sample Content ${i + 1}`,
+          date: formatDateForData(randomDate),
+          time: convertTo24Hour(timeSlots[Math.floor(Math.random() * timeSlots.length)]),
+          platform: platforms[Math.floor(Math.random() * platforms.length)],
+          type: types[Math.floor(Math.random() * types.length)],
+          audience: audiences[Math.floor(Math.random() * audiences.length)],
+          description: 'Sample content for demonstration.',
+          caption: 'This is a sample caption.'
+        });
+      }
+
+      saveContentToStorage();
+      renderWeekView();
+      showToast('Sample content added');
+    }
+
+    // PWA Installation
+    function setupPWA() {
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = 'inline-block';
+      });
+
+      window.addEventListener('appinstalled', () => {
+        installBtn.style.display = 'none';
+        deferredPrompt = null;
+        showToast('App installed successfully!');
+      });
+    }
+
+    function installPWA() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(choiceResult => {
+          if (choiceResult.outcome === 'accepted') {
+            installBtn.style.display = 'none';
+          }
+          deferredPrompt = null;
+        });
+      }
+    }
+
+    // Utility Functions
+    function handlePrint() {
+      window.print();
+    }
+
+    function exportAsPdf() {
+      showToast('Exporting to PDF... (This is a demo)');
+      // In a real app, you would use a library like jsPDF or window.print() with PDF printing
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3000);
+    }
+
+    function formatDate(date) {
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function formatShortDate(date) {
+      return date.getDate();
+    }
+
+    function formatDateForData(date) {
+      if (typeof date === 'string') return date;
+      const d = new Date(date);
+      return d.toISOString().split('T')[0];
+    }
+
+    function formatDateForInput(date) {
+      if (typeof date === 'string') return date;
+      const d = new Date(date);
+      return d.toISOString().split('T')[0];
+    }
+
+    function convertTo24Hour(time12h) {
+      if (!time12h) return '12:00';
+      if (!time12h.includes(' ')) return time12h; // Already in 24h format
+      
+      const [time, modifier] = time12h.split(' ');
+      let [hours, minutes] = time.split(':');
+      
+      if (hours === '12') {
+        hours = '00';
+      }
+      
+      if (modifier === 'PM') {
+        hours = parseInt(hours, 10) + 12;
+      }
+      
+      return `${hours}:${minutes || '00'}`;
+    }
+
+    function convertTo12Hour(time24h) {
+      if (!time24h) return '12:00 PM';
+      if (time24h.includes(' ')) return time24h; // Already in 12h format
+      
+      let [hours, minutes] = time24h.split(':');
+      hours = parseInt(hours, 10);
+      const modifier = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+      return `${hours}:${minutes || '00'} ${modifier}`;
+    }
+
+    function createContentElement(item) {
+      const contentEl = document.createElement('div');
+      contentEl.className = 'content-item';
+      contentEl.dataset.id = item.id;
+      contentEl.draggable = true;
+      
+      // Add platform color indicator
+      const platformIndicator = document.createElement('div');
+      platformIndicator.className = `platform-color-indicator platform-${item.platform.toLowerCase()}`;
+      contentEl.appendChild(platformIndicator);
+      
+      // Add drag handle
+      const dragHandle = document.createElement('div');
+      dragHandle.className = 'drag-handle';
+      dragHandle.innerHTML = '<i class="fas fa-grip-lines"></i>';
+      contentEl.appendChild(dragHandle);
+      
+      contentEl.innerHTML += `
+        <div class="content-title">${item.title}</div>
+        <div class="content-meta">
+          <span class="content-tag"><i class="fas fa-${getPlatformIcon(item.platform)}"></i> ${item.platform}</span>
+          <span class="content-tag">${item.type}</span>
+          ${item.audience ? `<span class="content-tag">${item.audience}</span>` : ''}
+        </div>
+      `;
+      contentEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openEditContentModal(item.id);
+      });
+      return contentEl;
+    }
+
+    function getPlatformIcon(platform) {
+      const icons = {
+        Instagram: 'camera',
+        Facebook: 'facebook',
+        Twitter: 'twitter',
+        LinkedIn: 'linkedin',
+        YouTube: 'youtube',
+        TikTok: 'music',
+        Pinterest: 'pinterest',
+        Blog: 'blog',
+        Email: 'envelope'
+      };
+      return icons[platform] || 'globe';
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
 </body>
 </html>
