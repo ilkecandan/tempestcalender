@@ -410,7 +410,7 @@
       min-width: 200px;
     }
 
-    .form-group.full-width {
+    .form-group full-width {
       flex: 0 0 100%;
     }
 
@@ -1487,7 +1487,12 @@
           cell.setAttribute('draggable', 'false');
 
           const dateStr = formatDateForData(dayDate);
-          let contentForCell = contentItems.filter(item => item.date === dateStr && item.time === convertTo24Hour(time));
+          const time24h = convertTo24Hour(time);
+          
+          // Get content for this specific cell
+          let contentForCell = contentItems.filter(item => {
+            return item.date === dateStr && item.time === time24h;
+          });
 
           // Apply filters if any
           const platformFilterValue = platformFilter.value;
@@ -1516,6 +1521,7 @@
           emptyHint.innerHTML = '<i class="fas fa-plus-circle"></i><br>Click to add content';
           cell.appendChild(emptyHint);
 
+          // Add content items to the cell
           if (contentForCell.length > 0) {
             contentForCell.forEach(item => {
               const contentEl = createContentElement(item);
@@ -1633,6 +1639,10 @@
       selectedTime.textContent = convertTo12Hour(content.time);
       dateTimeDisplay.style.display = 'flex';
       
+      // Set the selected cell to the content's date and time
+      selectedCellDate = contentDate;
+      selectedCellTime = convertTo12Hour(content.time);
+      
       // Highlight the cell containing this content
       highlightSelectedCell(contentDate, convertTo12Hour(content.time));
       
@@ -1730,7 +1740,7 @@
       const content = {
         id: Date.now(),
         title: title,
-        date: formatDateForInput(today),
+        date: formatDateForData(today),
         time: convertTo24Hour(timeString) || '12:00',
         platform: platform,
         type: type,
