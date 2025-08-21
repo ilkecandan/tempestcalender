@@ -1,2049 +1,1275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Plan your content strategy with Tempest Labs' elegant scrapbook-style calendar"/>
-  <title>Tempest Content Planner | Creative Content Calendar</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <style>
-    :root {
-      --primary: #2a9d8f;
-      --primary-dark: #1d7a6d;
-      --secondary: #264653;
-      --accent: #e9c46a;
-      --light: #f8f9fa;
-      --light-bg: rgba(255, 255, 255, 0.92);
-      --paper: #fffef7;
-      --paper-border: #e8e3d0;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      --transition: all 0.3s ease;
-      --teal-light: #88c9bf;
-      --teal-medium: #4fb3a8;
-      --teal-dark: #2a9d8f;
-      --success: #4caf50;
-      --warning: #ff9800;
-      --error: #f44336;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Raleway', sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #333;
-      line-height: 1.6;
-      min-height: 100vh;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .app-container {
-      width: 100%;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    /* App Section */
-    .app-section {
-      display: none;
-      background: var(--light-bg);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--paper-border);
-    }
-
-    /* Header */
-    header {
-      padding: 20px 30px;
-      background: var(--secondary);
-      color: white;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-
-    .logo span {
-      color: var(--accent);
-    }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .btn {
-      padding: 10px 20px;
-      border-radius: 8px;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 0.9rem;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      box-shadow: 0 4px 12px rgba(42, 157, 143, 0.3);
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(42, 157, 143, 0.4);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 10px 15px;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    .btn-today {
-      background: var(--accent);
-      color: var(--secondary);
-    }
-
-    .btn-today:hover {
-      background: #e0b351;
-      transform: translateY(-2px);
-    }
-
-    .btn-export {
-      background: var(--teal-medium);
-      color: white;
-    }
-
-    .btn-export:hover {
-      background: var(--teal-dark);
-      transform: translateY(-2px);
-    }
-
-    .btn-install {
-      background: var(--accent);
-      color: var(--secondary);
-    }
-
-    .btn-install:hover {
-      background: #e0b351;
-      transform: translateY(-2px);
-    }
-
-    .week-display {
-      font-size: 1.1rem;
-      font-weight: 500;
-      min-width: 250px;
-      text-align: center;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 8px 20px;
-      border-radius: 30px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-left: 10px;
-    }
-
-    /* Week View */
-    .week-view {
-      padding: 20px;
-      min-height: 600px;
-    }
-
-    .week-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      table-layout: fixed;
-      background: var(--paper);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .week-table th {
-      background: var(--primary);
-      color: white;
-      padding: 15px 10px;
-      text-align: center;
-      font-weight: 600;
-      font-size: 1rem;
-      position: relative;
-    }
-
-    .week-table th:first-child {
-      width: 100px;
-    }
-
-    .week-table td {
-      padding: 10px;
-      border: 1px solid var(--paper-border);
-      vertical-align: top;
-      height: 90px;
-      transition: var(--transition);
-      position: relative;
-      background: rgba(255, 255, 255, 0.7);
-    }
-
-    .week-table td:hover {
-      background: rgba(255, 253, 245, 0.9);
-      transform: scale(1.01);
-      z-index: 2;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .time-slot {
-      text-align: center;
-      font-weight: 500;
-      color: var(--secondary);
-      background: rgba(136, 201, 191, 0.15);
-    }
-
-    .content-cell {
-      cursor: pointer;
-      position: relative;
-    }
-
-    .add-content-btn {
-      position: absolute;
-      bottom: 5px;
-      right: 5px;
-      width: 24px;
-      height: 24px;
-      background: var(--accent);
-      color: var(--secondary);
-      border: none;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      transition: var(--transition);
-      font-size: 16px;
-    }
-
-    .content-cell:hover .add-content-btn {
-      opacity: 1;
-    }
-
-    .content-item {
-      background: white;
-      border-radius: 6px;
-      padding: 8px;
-      margin-bottom: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-      border-left: 3px solid var(--primary);
-      cursor: pointer;
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .content-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .content-title {
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 4px;
-      color: var(--secondary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .content-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      font-size: 0.75rem;
-      color: #666;
-    }
-
-    .content-tag {
-      background: rgba(136, 201, 191, 0.2);
-      padding: 2px 6px;
-      border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      white-space: nowrap;
-    }
-
-    /* Empty State */
-    .empty-state {
-      display: none;
-      justify-content: center;
-      align-items: center;
-      min-height: 400px;
-      padding: 30px;
-    }
-
-    .scrapbook-paper {
-      background: var(--paper);
-      border-radius: 8px;
-      padding: 30px;
-      text-align: center;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--paper-border);
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .scrapbook-paper i {
-      font-size: 2.5rem;
-      color: var(--accent);
-      margin-bottom: 15px;
-    }
-
-    .scrapbook-paper h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      margin-bottom: 10px;
-      color: var(--secondary);
-    }
-
-    .scrapbook-paper p {
-      margin-bottom: 20px;
-      color: #666;
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .modal-content {
-      width: 100%;
-      max-width: 600px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 25px;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .modal-header h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      color: var(--secondary);
-    }
-
-    .modal-header button {
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      cursor: pointer;
-      color: #777;
-      transition: var(--transition);
-    }
-
-    .modal-header button:hover {
-      color: var(--primary);
-    }
-
-    .form-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin-bottom: 15px;
-    }
-
-    .form-group {
-      flex: 1;
-      min-width: 200px;
-    }
-
-    .form-group.full-width {
-      flex: 0 0 100%;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 500;
-      color: var(--secondary);
-    }
-
-    .form-group select,
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      background: white;
-      transition: var(--transition);
-      font-family: 'Raleway', sans-serif;
-    }
-
-    .form-group select:focus,
-    .form-group input:focus,
-    .form-group textarea:focus {
-      border-color: var(--teal-medium);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.2);
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .btn-danger {
-      background: #e76f51;
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background: #d45c3f;
-    }
-
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--secondary);
-      color: white;
-      padding: 12px 25px;
-      border-radius: 8px;
-      font-weight: 500;
-      display: none;
-      z-index: 1001;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Footer */
-    .app-footer {
-      padding: 15px;
-      background: var(--secondary);
-      color: white;
-      text-align: center;
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .footer-link {
-      color: white;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: var(--transition);
-    }
-
-    .footer-link:hover {
-      color: var(--accent);
-    }
-
-    /* Responsive */
-    @media (max-width: 1200px) {
-      .week-table th {
-        font-size: 0.95rem;
-        padding: 12px 8px;
-      }
-
-      .week-table td {
-        height: 80px;
-        padding: 8px;
-      }
-    }
-
-    @media (max-width: 992px) {
-      .controls {
-        justify-content: center;
-      }
-      
-      .week-display {
-        order: 1;
-        width: 100%;
-        margin-top: 10px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      body {
-        padding: 10px;
-      }
-
-      header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-        padding: 15px;
-      }
-
-      .logo h1 {
-        font-size: 1.5rem;
-      }
-
-      .controls {
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .actions {
-        margin-top: 10px;
-        width: 100%;
-        justify-content: center;
-      }
-
-      .week-view {
-        padding: 15px;
-      }
-
-      .week-table th:first-child {
-        width: 70px;
-      }
-
-      .scrapbook-paper {
-        padding: 20px;
-      }
-    }
-
-    @media (max-width: 576px) {
-      .form-row {
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .form-group {
-        min-width: 100%;
-      }
-
-      .modal-header h3 {
-        font-size: 1.4rem;
-      }
-
-      .form-actions {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
-    }
-
-    @media print {
-      body {
-        background: none;
-        padding: 0;
-      }
-
-      .app-section {
-        box-shadow: none;
-        border: none;
-      }
-
-      header, .empty-state, .add-content-btn, .app-footer {
-        display: none !important;
-      }
-
-      .week-table td {
-        height: 60px;
-        page-break-inside: avoid;
-      }
-
-      .week-view {
-        padding: 0;
-      }
-    }
-
-    /* New styles for the tutorial section */
-    .tutorial-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 100;
-      display: none; /* Hidden by default */
-    }
-
-    .tutorial-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      transition: var(--transition);
-    }
-
-    .tutorial-btn:hover {
-      transform: scale(1.1);
-    }
-
-    .tutorial-content {
-      display: none;
-      position: absolute;
-      bottom: 60px;
-      right: 0;
-      width: 300px;
-      background: var(--paper);
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--paper-border);
-    }
-
-    .tutorial-content h3 {
-      font-family: 'Playfair Display', serif;
-      margin-bottom: 15px;
-      color: var(--secondary);
-    }
-
-    .tutorial-content p {
-      margin-bottom: 10px;
-      font-size: 0.9rem;
-    }
-
-    .tutorial-content ul {
-      padding-left: 20px;
-      margin-bottom: 15px;
-    }
-
-    .tutorial-content li {
-      margin-bottom: 8px;
-      font-size: 0.9rem;
-    }
-
-    .tutorial-close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      cursor: pointer;
-      color: #777;
-    }
-
-    /* Quick Add Panel */
-    .quick-add-panel {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--paper);
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--paper-border);
-      z-index: 1000;
-      display: none;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    .quick-add-panel h3 {
-      font-family: 'Playfair Display', serif;
-      margin-bottom: 15px;
-      color: var(--secondary);
-    }
-
-    .quick-add-panel .form-group {
-      margin-bottom: 15px;
-    }
-
-    .quick-add-panel .form-actions {
-      margin-top: 15px;
-    }
-
-    /* Content Preview */
-    .content-preview {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--paper);
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--paper-border);
-      z-index: 1000;
-      width: 90%;
-      max-width: 500px;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-
-    .content-preview h3 {
-      font-family: 'Playfair Display', serif;
-      margin-bottom: 15px;
-      color: var(--secondary);
-      border-bottom: 2px solid var(--accent);
-      padding-bottom: 10px;
-    }
-
-    .preview-item {
-      margin-bottom: 15px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .preview-item:last-child {
-      border-bottom: none;
-    }
-
-    .preview-item h4 {
-      color: var(--primary);
-      margin-bottom: 5px;
-      font-size: 1.1rem;
-    }
-
-    .preview-item p {
-      margin-bottom: 5px;
-      font-size: 0.9rem;
-    }
-
-    .preview-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .preview-tag {
-      background: rgba(136, 201, 191, 0.2);
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      color: #555;
-    }
-
-    .close-preview {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #777;
-    }
-
-    /* New styles for usability improvements */
-    .selected-cell {
-      background-color: rgba(233, 196, 106, 0.2) !important;
-      box-shadow: 0 0 0 2px var(--accent) inset;
-    }
-
-    .date-time-display {
-      background: rgba(136, 201, 191, 0.1);
-      padding: 10px 15px;
-      border-radius: 6px;
-      margin-bottom: 15px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .date-time-display i {
-      color: var(--primary);
-    }
-
-    .form-section {
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .form-section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      margin-bottom: 15px;
-      color: var(--secondary);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .form-section-title i {
-      color: var(--primary);
-    }
-
-    .required-field::after {
-      content: "*";
-      color: var(--error);
-      margin-left: 3px;
-    }
-
-    .drag-handle {
-      cursor: move;
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      opacity: 0.3;
-      transition: var(--transition);
-    }
-
-    .content-item:hover .drag-handle {
-      opacity: 0.7;
-    }
-
-    .cell-content-count {
-      position: absolute;
-      top: 3px;
-      right: 3px;
-      background: var(--primary);
-      color: white;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      font-size: 0.7rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .cell-highlight {
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(42, 157, 143, 0.4); }
-      70% { box-shadow: 0 0 0 10px rgba(42, 157, 143, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(42, 157, 143, 0); }
-    }
-
-    .empty-cell-hint {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #aaa;
-      font-size: 0.8rem;
-      text-align: center;
-      width: 100%;
-      padding: 0 10px;
-      opacity: 0;
-      transition: var(--transition);
-    }
-
-    .content-cell:hover .empty-cell-hint {
-      opacity: 1;
-    }
-
-    .platform-color-indicator {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--primary);
-    }
-
-    /* Platform-specific colors */
-    .platform-instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
-    .platform-facebook { background: #3b5998; }
-    .platform-twitter { background: #1da1f2; }
-    .platform-linkedin { background: #0077b5; }
-    .platform-youtube { background: #ff0000; }
-    .platform-tiktok { background: #000000; }
-    .platform-pinterest { background: #bd081c; }
-    .platform-blog { background: #6b6b6b; }
-    .platform-email { background: #ea4335; }
-
-    /* Loading spinner */
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255,255,255,.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s ease-in-out infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Navigation improvements */
-    .week-navigation {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .week-selector {
-      padding: 8px 15px;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-      background: white;
-      font-family: 'Raleway', sans-serif;
-    }
-
-    /* Content filtering */
-    .filter-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 15px;
-      align-items: center;
-      padding: 10px 20px;
-      background: rgba(233, 196, 106, 0.05);
-      border-radius: 8px;
-    }
-
-    .filter-select {
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-      background: white;
-      font-family: 'Raleway', sans-serif;
-      min-width: 150px;
-    }
-
-    .clear-filters {
-      background: none;
-      border: none;
-      color: var(--primary);
-      cursor: pointer;
-      text-decoration: underline;
-      font-size: 0.9rem;
-    }
-
-    /* Content item improvements */
-    .content-item.dragging {
-      opacity: 0.7;
-      transform: rotate(5deg);
-    }
-
-    .content-item-placeholder {
-      background: rgba(233, 196, 106, 0.2);
-      border: 2px dashed var(--accent);
-      border-radius: 6px;
-      height: 60px;
-      margin-bottom: 5px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#5a6b8c">
+    <meta name="description" content="Tempest Content Calendar - Plan and manage your social media content">
+    <title>Tempest Content Calendar</title>
+    <!-- jsPDF library for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%);
+            color: #4a4a4a;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            border-bottom: 2px solid rgba(139, 157, 184, 0.3);
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: #5a6b8c;
+            font-weight: 600;
+            font-size: 28px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            font-size: 24px;
+            color: #7b9acc;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .week-navigation {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 15px;
+        }
+
+        .week-navigation button {
+            background: rgba(139, 157, 184, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .week-navigation button:hover {
+            background: rgba(139, 157, 184, 0.4);
+        }
+
+        .current-week {
+            font-weight: 600;
+            color: #5a6b8c;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+        }
+
+        select, button {
+            padding: 10px 15px;
+            border: 1px solid rgba(139, 157, 184, 0.4);
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: #5a6b8c;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:hover, button:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-export {
+            background: linear-gradient(to right, #7b9acc, #8fb0d9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+        }
+
+        .btn-export:hover {
+            background: linear-gradient(to right, #6a88b5, #7b9acc);
+            box-shadow: 0 2px 8px rgba(107, 142, 193, 0.4);
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .calendar-container {
+            flex: 3;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calendar-header {
+            display: grid;
+            grid-template-columns: 80px repeat(7, 1fr);
+            background: linear-gradient(to right, #8fb0d9, #a5c0e5);
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .calendar-header div {
+            padding: 15px 10px;
+            text-align: center;
+        }
+
+        .time-column {
+            grid-column: 1;
+            background: linear-gradient(to bottom, #d4e1f4, #c5d4eb);
+            font-weight: bold;
+            color: #5a6b8c;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(7, 1fr);
+            grid-template-rows: repeat(24, 60px);
+            overflow-y: auto;
+            flex: 1;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .time-slot {
+            padding: 5px;
+            border-right: 1px solid rgba(210, 220, 235, 0.8);
+            border-bottom: 1px solid rgba(210, 220, 235, 0.8);
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .time-slot:hover {
+            background-color: rgba(210, 220, 235, 0.4);
+        }
+
+        .time-label {
+            grid-column: 1;
+            text-align: right;
+            padding: 5px 10px 0 0;
+            font-size: 12px;
+            color: #7b9acc;
+            border-right: 1px solid rgba(210, 220, 235, 0.8);
+            border-bottom: 1px solid rgba(210, 220, 235, 0.8);
+        }
+
+        .content-item {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border-left: 4px solid;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            cursor: move;
+            overflow: hidden;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .content-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .content-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #5a6b8c;
+        }
+
+        .content-details {
+            font-size: 12px;
+            color: #7b8ba9;
+        }
+
+        .preview-panel {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(139, 157, 184, 0.3);
+            color: #5a6b8c;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .preview-item {
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.7);
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .preview-item:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateX(5px);
+        }
+
+        .preview-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .preview-date {
+            font-weight: bold;
+            color: #5a6b8c;
+        }
+
+        .preview-platform {
+            background: rgba(139, 157, 184, 0.2);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .preview-type {
+            background: rgba(139, 157, 184, 0.15);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .preview-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #5a6b8c;
+        }
+
+        .preview-description {
+            font-size: 14px;
+            color: #7b8ba9;
+            margin-bottom: 10px;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .preview-actions button {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(90, 107, 140, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(to bottom, #f0f4f9, #e6ecf4);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 500px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            color: #5a6b8c;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #5a6b8c;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(139, 157, 184, 0.4);
+            border-radius: 6px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.7);
+            color: #5a6a8c;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #7b9acc, #8fb0d9);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #6a88b5, #7b9acc);
+            box-shadow: 0 4px 12px rgba(107, 142, 193, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(139, 157, 184, 0.2);
+            color: #5a6b8c;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(139, 157, 184, 0.3);
+        }
+
+        .btn-danger {
+            background: #c98b8b;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b87a7a;
+            box-shadow: 0 2px 8px rgba(193, 107, 107, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9cadce;
+            font-style: italic;
+        }
+
+        /* Platform and type color palette */
+        .platform-instagram { border-left-color: #d4a5c5; color: #d4a5c5; }
+        .platform-facebook { border-left-color: #9cadce; color: #9cadce; }
+        .platform-twitter { border-left-color: #a5c0e5; color: #a5c0e5; }
+        .platform-linkedin { border-left-color: #7b9acc; color: #7b9acc; }
+        .platform-youtube { border-left-color: #ccae7b; color: #ccae7b; }
+
+        .type-post { border-left-color: #9b8fcc; color: #9b8fcc; }
+        .type-story { border-left-color: #ccae7b; color: #ccae7b; }
+        .type-video { border-left-color: #c98b8b; color: #c98b8b; }
+        .type-reel { border-left-color: #8b9ecc; color: #8b9ecc; }
+        .type-carousel { border-left-color: #7bccae; color: #7bccae; }
+
+        /* Calendar date headers */
+        .calendar-date {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        footer {
+            margin-top: 30px;
+            padding: 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: #5a6b8c;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #8fb0d9;
+        }
+
+        .today-btn {
+            background: rgba(139, 157, 184, 0.2);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #5a6b8c;
+        }
+
+        .today-btn:hover {
+            background: rgba(139, 157, 184, 0.4);
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-controls {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .filters, .week-navigation {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            footer {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+            }
+            
+            .calendar-header div {
+                padding: 10px 5px;
+                font-size: 12px;
+            }
+            
+            .time-label {
+                font-size: 10px;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: 50px repeat(7, 1fr);
+            }
+            
+            .time-column {
+                font-size: 12px;
+            }
+        }
+
+        /* PWA installation prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .install-prompt button {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        /* Tutorial highlights */
+        .tutorial-highlight {
+            box-shadow: 0 0 0 4px rgba(123, 154, 204, 0.5) !important;
+            transition: box-shadow 0.5s ease;
+        }
+
+        /* Quick actions */
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .quick-action-btn {
+            padding: 8px 15px;
+            background: rgba(139, 157, 184, 0.15);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .quick-action-btn:hover {
+            background: rgba(139, 157, 184, 0.3);
+        }
+    </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- Main App -->
-    <section class="app-section" id="appSection">
-      <header>
-        <div class="logo">
-          <i class="fas fa-calendar-alt"></i>
-          <h1>Tempest <span> Content Planner</span></h1>
-        </div>
-        <div class="controls">
-          <button class="btn btn-secondary" id="prevWeekBtn">
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <button class="btn btn-today" id="todayBtn">Today</button>
-          <button class="btn btn-secondary" id="nextWeekBtn">
-            <i class="fas fa-chevron-right"></i>
-          </button>
-          <div class="week-display" id="weekDisplay"></div>
-          <div class="actions">
-            <button class="btn btn-export" id="printBtn">
-              <i class="fas fa-print"></i> Print
-            </button>
-            <button class="btn btn-export" id="exportPdfBtn">
-              <i class="fas fa-file-pdf"></i> PDF
-            </button>
-            <button class="btn btn-install" id="installBtn" style="display: none;">
-              <i class="fas fa-download"></i> Install App
-            </button>
-            <button class="btn btn-primary" id="quickAddBtn">
-              <i class="fas fa-plus"></i> Quick Add
-            </button>
-            <button class="btn btn-secondary" id="viewContentBtn">
-              <i class="fas fa-eye"></i> View All
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <div class="filter-bar" id="filterBar">
-        <select class="filter-select" id="platformFilter">
-          <option value="">All Platforms</option>
-          <option value="Instagram">Instagram</option>
-          <option value="Facebook">Facebook</option>
-          <option value="Twitter">Twitter</option>
-          <option value="LinkedIn">LinkedIn</option>
-          <option value="TikTok">TikTok</option>
-          <option value="YouTube">YouTube</option>
-          <option value="Pinterest">Pinterest</option>
-          <option value="Blog">Blog</option>
-          <option value="Email">Email</option>
-        </select>
-        <select class="filter-select" id="typeFilter">
-          <option value="">All Types</option>
-          <option value="Image">Image Post</option>
-          <option value="Video">Video</option>
-          <option value="Carousel">Carousel</option>
-          <option value="Story">Story</option>
-          <option value="Reel">Reel</option>
-          <option value="Live">Live Stream</option>
-          <option value="Article">Article</option>
-          <option value="Poll">Poll</option>
-          <option value="Guide">Guide</option>
-        </select>
-        <button class="clear-filters" id="clearFiltersBtn">Clear Filters</button>
-      </div>
-
-      <div class="week-view">
-        <table class="week-table" id="weekTable">
-          <thead>
-            <tr><th>Time</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
-      <div class="empty-state" id="emptyState">
-        <div class="scrapbook-paper">
-          <i class="fas fa-calendar-plus"></i>
-          <h3>Your week is looking empty</h3>
-          <p>Click on a time slot to add content or use the Quick Add button</p>
-          <button class="btn btn-primary" id="addSampleContentBtn">
-            <i class="fas fa-magic"></i> Add Sample Content
-            </button>
-        </div>
-      </div>
-      
-      <footer class="app-footer">
-        <div class="footer-links">
-          <a href="https://buymeacoffee.com/ilkecandan" target="_blank" class="footer-link">
-            <i class="fas fa-coffee"></i> Support Me
-          </a>
-          <a href="https://www.linkedin.com/in/ilkecandan/" target="_blank" class="footer-link">
-            <i class="fab fa-linkedin"></i> Let's Meet on LinkedIn
-          </a>
-          <a href="https://tempestlabs.space" target="_blank" class="footer-link">
-            <i class="fas fa-globe"></i> Visit Our Website
-          </a>
-        </div>
-      </footer>
-    </section>
-  </div>
-
-  <!-- Content Modal -->
-  <div class="modal" id="contentModal">
-    <div class="modal-content scrapbook-paper">
-      <div class="modal-header">
-        <h3 id="modalTitle">Add Content</h3>
-        <button id="closeModal">&times;</button>
-      </div>
-      
-      <div class="date-time-display" id="dateTimeDisplay">
-        <i class="fas fa-calendar-day"></i>
-        <span id="selectedDate"></span>
-        <i class="fas fa-clock"></i>
-        <span id="selectedTime"></span>
-      </div>
-      
-      <form id="contentForm">
-        <div class="form-section">
-          <div class="form-section-title">
-            <i class="fas fa-info-circle"></i>
-            <span>Basic Information</span>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label class="required-field">Content Title</label>
-              <input type="text" id="contentTitle" required placeholder="Give your content a title">
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calendar-alt logo"></i> Tempest Content Calendar</h1>
+            <div class="header-controls">
+                <div class="week-navigation">
+                    <button id="prev-week" title="Previous week"><i class="fas fa-chevron-left"></i></button>
+                    <div class="current-week" id="current-week">Loading...</div>
+                    <button id="next-week" title="Next week"><i class="fas fa-chevron-right"></i></button>
+                    <button class="today-btn" id="today-btn">Today</button>
+                </div>
+                <div class="filters">
+                    <select id="platform-filter">
+                        <option value="all">All Platforms</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="twitter">Twitter</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="youtube">YouTube</option>
+                    </select>
+                    <select id="type-filter">
+                        <option value="all">All Types</option>
+                        <option value="post">Post</option>
+                        <option value="story">Story</option>
+                        <option value="video">Video</option>
+                        <option value="reel">Reel</option>
+                        <option value="carousel">Carousel</option>
+                    </select>
+                    <button id="export-pdf" class="btn-export"><i class="fas fa-file-pdf"></i> Export PDF</button>
+                </div>
             </div>
-            <div class="form-group">
-              <label class="required-field">Platform</label>
-              <select id="contentPlatform" required>
-                <option value="Instagram">Instagram</option>
-                <option value="Facebook">Facebook</option>
-                <option value="Twitter">Twitter</option>
-                <option value="LinkedIn">LinkedIn</option>
-                <option value="TikTok">TikTok</option>
-                <option value="YouTube">YouTube</option>
-                <option value="Pinterest">Pinterest</option>
-                <option value="Blog">Blog</option>
-                <option value="Email">Email Newsletter</option>
-              </select>
-            </div>
-          </div>
+        </header>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label class="required-field">Content Type</label>
-              <select id="contentType" required>
-                <option value="Image">Image Post</option>
-                <option value="Video">Video</option>
-                <option value="Carousel">Carousel</option>
-                <option value="Story">Story</option>
-                <option value="Reel">Reel</option>
-                <option value="Live">Live Stream</option>
-                <option value="Article">Article</option>
-                <option value="Poll">Poll</option>
-                <option value="Guide">Guide</option>
-              </select>
+        <div class="main-content">
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <div class="time-column">Time</div>
+                    <!-- Days will be populated by JavaScript -->
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Time labels and slots will be generated by JavaScript -->
+                </div>
             </div>
-            <div class="form-group">
-              <label>Audience Stage</label>
-              <select id="contentAudience">
-                <option value="">Not specified</option>
-                <option value="Awareness">Awareness</option>
-                <option value="Consideration">Consideration</option>
-                <option value="Decision">Decision</option>
-                <option value="Retention">Retention</option>
-                <option value="Advocacy">Advocacy</option>
-              </select>
+
+            <div class="preview-panel">
+                <div class="preview-header">
+                    <h2>Content Preview</h2>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" id="add-content-btn" title="Add new content">
+                            <i class="fas fa-plus"></i> Add Content
+                        </button>
+                    </div>
+                </div>
+                <div class="preview-list" id="preview-list">
+                    <!-- Preview items will be generated by JavaScript -->
+                </div>
             </div>
-          </div>
         </div>
 
-        <div class="form-section">
-          <div class="form-section-title">
-            <i class="fas fa-align-left"></i>
-            <span>Content Details</span>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group full-width">
-              <label>Description</label>
-              <textarea id="contentDescription" rows="2" placeholder="What's this content about? (Optional)"></textarea>
+        <footer>
+            <div class="footer-links">
+                <a href="https://tempestlabs.space" target="_blank">
+                    <i class="fas fa-globe"></i> Visit Our Website
+                </a>
+                <a href="https://buymeacoffee.com/ilkecandan?new=1" target="_blank">
+                    <i class="fas fa-coffee"></i> Support Us
+                </a>
             </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group full-width">
-              <label>Caption / Key Message</label>
-              <textarea id="contentCaption" rows="3" placeholder="Write your caption here... (Optional)"></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="saveBtn">
-            <span id="saveBtnText">Save Content</span>
-            <span id="saveBtnSpinner" class="loading" style="display: none;"></span>
-          </button>
-          <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
-        </div>
-      </form>
+            <div class="app-version">v1.1.0</div>
+        </footer>
     </div>
-  </div>
 
-  <!-- Quick Add Panel -->
-  <div class="quick-add-panel" id="quickAddPanel">
-    <h3>Quick Add Content</h3>
-    <form id="quickAddForm">
-      <div class="form-group">
-        <label>Content Title *</label>
-        <input type="text" id="quickTitle" required placeholder="Give your content a title">
-      </div>
-      <div class="form-group">
-        <label>Platform *</label>
-        <select id="quickPlatform" required>
-          <option value="Instagram">Instagram</option>
-          <option value="Facebook">Facebook</option>
-          <option value="Twitter">Twitter</option>
-          <option value="LinkedIn">LinkedIn</option>
-          <option value="TikTok">TikTok</option>
-          <option value="YouTube">YouTube</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Content Type *</label>
-        <select id="quickType" required>
-          <option value="Image">Image Post</option>
-          <option value="Video">Video</option>
-          <option value="Carousel">Carousel</option>
-          <option value="Story">Story</option>
-          <option value="Reel">Reel</option>
-        </select>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn btn-secondary" id="closeQuickAddBtn">Cancel</button>
-        <button type="submit" class="btn btn-primary">Add Content</button>
-      </div>
-    </form>
-  </div>
-
-  <!-- Content Preview Panel -->
-  <div class="content-preview" id="contentPreview">
-    <button class="close-preview" id="closePreviewBtn">&times;</button>
-    <h3>Your Content Plan</h3>
-    <div id="previewContent"></div>
-  </div>
-
-  <!-- Tutorial Container -->
-  <div class="tutorial-container">
-    <div class="tutorial-btn" id="tutorialBtn">
-      <i class="fas fa-question"></i>
+    <!-- Modal for adding/editing content -->
+    <div class="modal" id="content-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Content</h2>
+            </div>
+            <form id="content-form">
+                <input type="hidden" id="content-id">
+                <div class="form-group">
+                    <label for="content-title">Title</label>
+                    <input type="text" id="content-title" required placeholder="Enter content title">
+                </div>
+                <div class="form-group">
+                    <label for="content-description">Description</label>
+                    <textarea id="content-description" placeholder="Enter content description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="content-platform">Platform</label>
+                    <select id="content-platform" required>
+                        <option value="instagram">Instagram</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="twitter">Twitter</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="youtube">YouTube</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="content-type">Type</label>
+                    <select id="content-type" required>
+                        <option value="post">Post</option>
+                        <option value="story">Story</option>
+                        <option value="video">Video</option>
+                        <option value="reel">Reel</option>
+                        <option value="carousel">Carousel</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="content-date">Date</label>
+                    <input type="date" id="content-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="content-time">Time</label>
+                    <input type="time" id="content-time" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-btn">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Content</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="tutorial-content" id="tutorialContent">
-      <button class="tutorial-close" id="closeTutorialBtn">&times;</button>
-      <h3>How to Use This App</h3>
-      <p>Welcome to the Tempest Content Planner! Here's how to get started:</p>
-      <ul>
-        <li><strong>Add content</strong> by clicking on any time slot or using the Quick Add button</li>
-        <li><strong>Navigate weeks</strong> using the arrow buttons or Today button</li>
-        <li><strong>Edit content</strong> by clicking on any content item</li>
-        <li><strong>View all content</strong> using the "View All" button</li>
-        <li><strong>Print or export</strong> your content plan using the buttons in the header</li>
-        <li><strong>Filter content</strong> by platform or content type using the filter dropdowns</li>
-        <li><strong>Drag and drop</strong> content items to reschedule them</li>
-      </ul>
-      <p>Only title, platform and content type are required fields.</p>
+
+    <!-- PWA Install Prompt -->
+    <div class="install-prompt" id="install-prompt">
+        <p>Install Tempest Content Calendar for a better experience</p>
+        <button class="btn-primary" id="install-btn">Install App</button>
+        <button class="btn-secondary" id="dismiss-install">Not Now</button>
     </div>
-  </div>
 
-  <!-- Toast Notification -->
-  <div class="toast" id="toast"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the app
+            initCalendar();
+            loadContent();
+            setupEventListeners();
+            updateCurrentWeekDisplay();
+            
+            // Check if PWA is already installed
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                console.log('Running as PWA');
+            } else {
+                // Show install prompt after a delay
+                setTimeout(showInstallPrompt, 10000);
+            }
+        });
 
-  <script>
-    // DOM Elements
-    const appSection = document.getElementById('appSection');
-    const weekDisplay = document.getElementById('weekDisplay');
-    const weekTable = document.getElementById('weekTable');
-    const prevWeekBtn = document.getElementById('prevWeekBtn');
-    const nextWeekBtn = document.getElementById('nextWeekBtn');
-    const todayBtn = document.getElementById('todayBtn');
-    const printBtn = document.getElementById('printBtn');
-    const exportPdfBtn = document.getElementById('exportPdfBtn');
-    const installBtn = document.getElementById('installBtn');
-    const emptyState = document.getElementById('emptyState');
-    const addSampleContentBtn = document.getElementById('addSampleContentBtn');
-    const contentModal = document.getElementById('contentModal');
-    const closeModal = document.getElementById('closeModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const contentForm = document.getElementById('contentForm');
-    const contentTitle = document.getElementById('contentTitle');
-    const contentPlatform = document.getElementById('contentPlatform');
-    const contentType = document.getElementById('contentType');
-    const contentAudience = document.getElementById('contentAudience');
-    const contentDescription = document.getElementById('contentDescription');
-    const contentCaption = document.getElementById('contentCaption');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const deleteBtn = document.getElementById('deleteBtn');
-    const toast = document.getElementById('toast');
-    const quickAddBtn = document.getElementById('quickAddBtn');
-    const quickAddPanel = document.getElementById('quickAddPanel');
-    const quickAddForm = document.getElementById('quickAddForm');
-    const closeQuickAddBtn = document.getElementById('closeQuickAddBtn');
-    const viewContentBtn = document.getElementById('viewContentBtn');
-    const contentPreview = document.getElementById('contentPreview');
-    const closePreviewBtn = document.getElementById('closePreviewBtn');
-    const previewContent = document.getElementById('previewContent');
-    const tutorialBtn = document.getElementById('tutorialBtn');
-    const tutorialContent = document.getElementById('tutorialContent');
-    const closeTutorialBtn = document.getElementById('closeTutorialBtn');
-    const dateTimeDisplay = document.getElementById('dateTimeDisplay');
-    const selectedDate = document.getElementById('selectedDate');
-    const selectedTime = document.getElementById('selectedTime');
-    const saveBtn = document.getElementById('saveBtn');
-    const saveBtnText = document.getElementById('saveBtnText');
-    const saveBtnSpinner = document.getElementById('saveBtnSpinner');
-    const platformFilter = document.getElementById('platformFilter');
-    const typeFilter = document.getElementById('typeFilter');
-    const clearFiltersBtn = document.getElementById('clearFiltersBtn');
-    const filterBar = document.getElementById('filterBar');
+        // Global variables
+        let contentItems = [];
+        let currentEditId = null;
+        let dragSrcElement = null;
+        let currentWeekOffset = 0; // 0 = current week, 1 = next week, -1 = previous week, etc.
 
-    // App State
-    let currentDate = new Date();
-    let contentItems = [];
-    let editingContentId = null;
-    let deferredPrompt = null;
-    let selectedCellDate = null;
-    let selectedCellTime = null;
-    let draggedItem = null;
-    let dragSourceCell = null;
+        // Days of the week for the calendar header
+        const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-    // Time slots for the table
-    const timeSlots = [
-      '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
-      '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM',
-      '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM'
-    ];
-
-    // Initialize App
-    function initApp() {
-      loadContent();
-      setupEventListeners();
-      setupPWA();
-      setupDragAndDrop();
-      appSection.style.display = 'block';
-      renderWeekView();
-      
-      // Show tutorial on first visit
-      const hasSeenTutorial = localStorage.getItem('hasSeenTutorial');
-      if (!hasSeenTutorial) {
-        setTimeout(() => {
-          tutorialContent.style.display = 'block';
-          localStorage.setItem('hasSeenTutorial', 'true');
-        }, 2000);
-      }
-    }
-
-    // Event Listeners
-    function setupEventListeners() {
-      prevWeekBtn.addEventListener('click', () => changeWeek(-1));
-      nextWeekBtn.addEventListener('click', () => changeWeek(1));
-      todayBtn.addEventListener('click', goToToday);
-      printBtn.addEventListener('click', handlePrint);
-      exportPdfBtn.addEventListener('click', exportAsPdf);
-      installBtn.addEventListener('click', installPWA);
-      addSampleContentBtn.addEventListener('click', addSampleContent);
-      closeModal.addEventListener('click', closeContentModal);
-      cancelBtn.addEventListener('click', closeContentModal);
-      contentForm.addEventListener('submit', saveContent);
-      deleteBtn.addEventListener('click', deleteContent);
-      contentModal.addEventListener('click', (e) => {
-        if (e.target === contentModal) closeContentModal();
-      });
-      
-      // Quick add functionality
-      quickAddBtn.addEventListener('click', openQuickAddPanel);
-      closeQuickAddBtn.addEventListener('click', closeQuickAddPanel);
-      quickAddForm.addEventListener('submit', handleQuickAdd);
-      
-      // View content functionality
-      viewContentBtn.addEventListener('click', showContentPreview);
-      closePreviewBtn.addEventListener('click', closeContentPreview);
-      
-      // Tutorial functionality
-      tutorialBtn.addEventListener('click', toggleTutorial);
-      closeTutorialBtn.addEventListener('click', closeTutorial);
-      
-      // Filter functionality
-      platformFilter.addEventListener('change', applyFilters);
-      typeFilter.addEventListener('change', applyFilters);
-      clearFiltersBtn.addEventListener('click', clearFilters);
-      
-      // Close panels when clicking outside
-      document.addEventListener('click', (e) => {
-        if (quickAddPanel.style.display === 'block' && !quickAddPanel.contains(e.target) && e.target !== quickAddBtn) {
-          closeQuickAddPanel();
+        // Initialize the calendar grid with dates
+        function initCalendar() {
+            const calendarGrid = document.getElementById('calendar-grid');
+            const calendarHeader = document.querySelector('.calendar-header');
+            
+            // Clear existing content except time column
+            while (calendarHeader.children.length > 1) {
+                calendarHeader.removeChild(calendarHeader.lastChild);
+            }
+            calendarGrid.innerHTML = '';
+            
+            // Get Monday of the current week
+            const monday = getMondayForWeek(currentWeekOffset);
+            
+            // Add day headers with dates
+            for (let i = 0; i < 7; i++) {
+                const dayDate = new Date(monday);
+                dayDate.setDate(monday.getDate() + i);
+                
+                const dayElement = document.createElement('div');
+                dayElement.innerHTML = `
+                    ${daysOfWeek[i]}
+                    <div class="calendar-date">${dayDate.getDate()}/${dayDate.getMonth() + 1}</div>
+                `;
+                dayElement.dataset.date = dayDate.toISOString().split('T')[0];
+                calendarHeader.appendChild(dayElement);
+            }
+            
+            // Create time labels and empty slots
+            for (let hour = 8; hour <= 20; hour++) {
+                // Add time label
+                const timeLabel = document.createElement('div');
+                timeLabel.className = 'time-label';
+                timeLabel.textContent = `${hour}:00`;
+                calendarGrid.appendChild(timeLabel);
+                
+                // Add empty slots for each day
+                for (let day = 0; day < 7; day++) {
+                    const slot = document.createElement('div');
+                    slot.className = 'time-slot';
+                    slot.dataset.hour = hour;
+                    slot.dataset.day = day;
+                    slot.addEventListener('click', () => openAddModal(hour, day));
+                    calendarGrid.appendChild(slot);
+                }
+            }
+            
+            updateCurrentWeekDisplay();
         }
-        if (contentPreview.style.display === 'block' && !contentPreview.contains(e.target) && e.target !== viewContentBtn) {
-          closeContentPreview();
+
+        // Get Monday for the current week based on offset
+        function getMondayForWeek(weekOffset) {
+            const today = new Date();
+            const dayOfWeek = today.getDay();
+            const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // adjust when day is Sunday
+            const monday = new Date(today.setDate(diff));
+            
+            // Apply week offset
+            monday.setDate(monday.getDate() + (weekOffset * 7));
+            return monday;
         }
-        if (tutorialContent.style.display === 'block' && !tutorialContent.contains(e.target) && e.target !== tutorialBtn) {
-          closeTutorial();
+
+        // Update the current week display
+        function updateCurrentWeekDisplay() {
+            const monday = getMondayForWeek(currentWeekOffset);
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            
+            const options = { month: 'short', day: 'numeric' };
+            const mondayStr = monday.toLocaleDateString('en-US', options);
+            const sundayStr = sunday.toLocaleDateString('en-US', options);
+            
+            document.getElementById('current-week').textContent = `${mondayStr} - ${sundayStr}`;
+            
+            // Highlight current day if showing current week
+            const today = new Date();
+            if (currentWeekOffset === 0 && 
+                today >= monday && 
+                today <= sunday) {
+                const dayIndex = (today.getDay() + 6) % 7; // Convert to 0-6 (Mon-Sun)
+                const dayElements = document.querySelectorAll('.calendar-header > div:not(.time-column)');
+                if (dayElements[dayIndex]) {
+                    dayElements[dayIndex].style.background = 'rgba(107, 142, 193, 0.3)';
+                    dayElements[dayIndex].style.color = '#fff';
+                }
+            }
         }
-      });
-    }
 
-    // Setup drag and drop functionality
-    function setupDragAndDrop() {
-      document.addEventListener('dragstart', (e) => {
-        if (e.target.classList.contains('content-item')) {
-          draggedItem = e.target;
-          dragSourceCell = e.target.closest('.content-cell');
-          e.target.classList.add('dragging');
-          e.dataTransfer.setData('text/plain', e.target.dataset.id);
-          e.dataTransfer.effectAllowed = 'move';
-        }
-      });
-
-      document.addEventListener('dragend', (e) => {
-        if (e.target.classList.contains('content-item')) {
-          e.target.classList.remove('dragging');
-          draggedItem = null;
-          dragSourceCell = null;
-        }
-      });
-
-      document.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        if (draggedItem) {
-          e.dataTransfer.dropEffect = 'move';
-        }
-      });
-
-      document.addEventListener('drop', (e) => {
-        e.preventDefault();
-        if (!draggedItem) return;
-        const targetCell = e.target.closest('.content-cell');
-        if (!targetCell) return;
-
-        const contentId = parseInt(e.dataTransfer.getData('text/plain'), 10);
-        const targetDate = targetCell.dataset.date;
-        const targetTime = convertTo24Hour(targetCell.dataset.time);
-        
-        // Update the content item with new date and time
-        const contentIndex = contentItems.findIndex(item => item.id === contentId);
-        if (contentIndex !== -1) {
-          contentItems[contentIndex].date = targetDate;
-          contentItems[contentIndex].time = targetTime;
-          saveContentToStorage();
-          renderWeekView();
-          showToast('Content moved successfully');
-        }
-      });
-    }
-
-    // Render Calendar
-    function renderWeekView() {
-      const weekStart = new Date(currentDate);
-      weekStart.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1));
-
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekStart.getDate() + 6);
-
-      weekDisplay.textContent = `Week of ${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
-      
-      // Clear existing table
-      const tbody = weekTable.querySelector('tbody');
-      if (tbody) {
-        weekTable.removeChild(tbody);
-      }
-
-      const thead = weekTable.querySelector('thead');
-      thead.innerHTML = '<tr><th>Time</th>';
-
-      const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-      const currentDay = new Date(weekStart);
-
-      for (let i = 0; i < 7; i++) {
-        const th = document.createElement('th');
-        th.innerHTML = `<div>${daysOfWeek[i]}</div><div>${formatShortDate(currentDay)}</div>`;
-        thead.querySelector('tr').appendChild(th);
-        currentDay.setDate(currentDay.getDate() + 1);
-      }
-
-      const newTbody = document.createElement('tbody');
-      let hasContent = false;
-
-      timeSlots.forEach(time => {
-        const row = document.createElement('tr');
-        const timeCell = document.createElement('td');
-        timeCell.className = 'time-slot';
-        timeCell.textContent = time;
-        row.appendChild(timeCell);
-
-        const dayDate = new Date(weekStart);
-        for (let i = 0; i < 7; i++) {
-          const cell = document.createElement('td');
-          cell.className = 'content-cell';
-          cell.dataset.date = formatDateForData(dayDate);
-          cell.dataset.time = time;
-          cell.setAttribute('draggable', 'false');
-
-          const dateStr = formatDateForData(dayDate);
-          const time24h = convertTo24Hour(time);
-          
-          // Get content for this specific cell
-          let contentForCell = contentItems.filter(item => {
-            return item.date === dateStr && item.time === time24h;
-          });
-
-          // Apply filters if any
-          const platformFilterValue = platformFilter.value;
-          const typeFilterValue = typeFilter.value;
-          
-          if (platformFilterValue) {
-            contentForCell = contentForCell.filter(item => item.platform === platformFilterValue);
-          }
-          
-          if (typeFilterValue) {
-            contentForCell = contentForCell.filter(item => item.type === typeFilterValue);
-          }
-
-          // Add content count badge
-          if (contentForCell.length > 0) {
-            hasContent = true;
-            const countBadge = document.createElement('span');
-            countBadge.className = 'cell-content-count';
-            countBadge.textContent = contentForCell.length;
-            cell.appendChild(countBadge);
-          }
-
-          // Add empty cell hint
-          const emptyHint = document.createElement('div');
-          emptyHint.className = 'empty-cell-hint';
-          emptyHint.innerHTML = '<i class="fas fa-plus-circle"></i><br>Click to add content';
-          cell.appendChild(emptyHint);
-
-          // Add content items to the cell
-          if (contentForCell.length > 0) {
-            contentForCell.forEach(item => {
-              const contentEl = createContentElement(item);
-              cell.appendChild(contentEl);
+        // Set up event listeners
+        function setupEventListeners() {
+            // Modal buttons
+            document.getElementById('cancel-btn').addEventListener('click', closeModal);
+            document.getElementById('content-form').addEventListener('submit', saveContent);
+            
+            // Filters
+            document.getElementById('platform-filter').addEventListener('change', filterContent);
+            document.getElementById('type-filter').addEventListener('change', filterContent);
+            
+            // PDF Export
+            document.getElementById('export-pdf').addEventListener('click', exportToPDF);
+            
+            // Week navigation
+            document.getElementById('prev-week').addEventListener('click', () => navigateWeek(-1));
+            document.getElementById('next-week').addEventListener('click', () => navigateWeek(1));
+            document.getElementById('today-btn').addEventListener('click', goToToday);
+            
+            // Add content button
+            document.getElementById('add-content-btn').addEventListener('click', openAddModalWithoutSlot);
+            
+            // PWA install prompt
+            document.getElementById('install-btn').addEventListener('click', installPWA);
+            document.getElementById('dismiss-install').addEventListener('click', dismissInstallPrompt);
+            
+            // Before install prompt
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                window.deferredPrompt = e;
             });
-          }
-
-          const addBtn = document.createElement('button');
-          addBtn.className = 'add-content-btn';
-          addBtn.innerHTML = '+';
-          addBtn.onclick = (e) => {
-            e.stopPropagation();
-            openContentModal(dayDate, time);
-          };
-
-          cell.appendChild(addBtn);
-          cell.onclick = () => openContentModal(dayDate, time);
-          row.appendChild(cell);
-          dayDate.setDate(dayDate.getDate() + 1);
         }
 
-        newTbody.appendChild(row);
-      });
-
-      weekTable.appendChild(newTbody);
-      emptyState.style.display = hasContent ? 'none' : 'flex';
-    }
-
-    // Load & Save
-    function loadContent() {
-      try {
-        const data = localStorage.getItem('contentCalendarData');
-        contentItems = data ? JSON.parse(data) : [];
-        
-        // Ensure all items have proper IDs
-        contentItems = contentItems.map(item => {
-          if (!item.id) {
-            return {...item, id: Date.now() + Math.floor(Math.random() * 1000)};
-          }
-          return item;
-        });
-      } catch (e) {
-        console.error('Error loading content:', e);
-        contentItems = [];
-      }
-    }
-
-    function saveContentToStorage() {
-      try {
-        localStorage.setItem('contentCalendarData', JSON.stringify(contentItems));
-      } catch (e) {
-        console.error('Error saving content:', e);
-        showToast('Error saving content. Local storage might be full.');
-      }
-    }
-
-    // Content Modal
-    function openContentModal(date, time) {
-      editingContentId = null;
-      modalTitle.textContent = 'Add Content';
-      deleteBtn.style.display = 'none';
-      contentForm.reset();
-      
-      // Store selected cell info
-      selectedCellDate = date;
-      selectedCellTime = time;
-      
-      // Update date/time display
-      selectedDate.textContent = formatDate(date);
-      selectedTime.textContent = time;
-      dateTimeDisplay.style.display = 'flex';
-      
-      contentModal.style.display = 'flex';
-      
-      // Highlight the selected cell
-      highlightSelectedCell(date, time);
-    }
-
-    function highlightSelectedCell(date, time) {
-      // Remove any existing highlights
-      const cells = document.querySelectorAll('.content-cell');
-      cells.forEach(cell => cell.classList.remove('selected-cell'));
-      
-      // Find and highlight the selected cell
-      const dateStr = formatDateForData(date);
-      const targetCell = document.querySelector(`.content-cell[data-date="${dateStr}"][data-time="${time}"]`);
-      if (targetCell) {
-        targetCell.classList.add('selected-cell');
-        targetCell.classList.add('cell-highlight');
-        setTimeout(() => {
-          targetCell.classList.remove('cell-highlight');
-        }, 2000);
-      }
-    }
-
-    function openEditContentModal(contentId) {
-      const content = contentItems.find(item => item.id === contentId);
-      if (!content) return;
-
-      editingContentId = contentId;
-      modalTitle.textContent = 'Edit Content';
-      deleteBtn.style.display = 'block';
-
-      contentTitle.value = content.title || '';
-      contentPlatform.value = content.platform || 'Instagram';
-      contentType.value = content.type || 'Image';
-      contentAudience.value = content.audience || '';
-      contentDescription.value = content.description || '';
-      contentCaption.value = content.caption || '';
-
-      // Update date/time display
-      const [y, m, d] = content.date.split('-').map(Number);
-      const contentDate = new Date(y, m - 1, d);
-      selectedDate.textContent = formatDate(contentDate);
-      selectedTime.textContent = convertTo12Hour(content.time);
-      dateTimeDisplay.style.display = 'flex';
-      
-      // Set the selected cell to the content's date and time
-      selectedCellDate = contentDate;
-      selectedCellTime = convertTo12Hour(content.time);
-      
-      // Highlight the cell containing this content
-      highlightSelectedCell(contentDate, convertTo12Hour(content.time));
-      
-      contentModal.style.display = 'flex';
-    }
-
-    function closeContentModal() {
-      contentModal.style.display = 'none';
-      
-      // Remove cell highlighting
-      const cells = document.querySelectorAll('.content-cell');
-      cells.forEach(cell => cell.classList.remove('selected-cell'));
-    }
-
-    function saveContent(e) {
-      e.preventDefault();
-      
-      // Show loading state
-      saveBtnText.style.display = 'none';
-      saveBtnSpinner.style.display = 'inline-block';
-      saveBtn.disabled = true;
-
-      // Simulate network delay for better UX feedback
-      setTimeout(() => {
-        // Ensure we always have valid date and time values
-        const contentDate = selectedCellDate || new Date();
-        const contentTime = selectedCellTime || timeSlots[0];
-        
-        const content = {
-          id: editingContentId || Date.now(),
-          title: contentTitle.value || 'Untitled Content',
-          date: formatDateForData(contentDate),
-          time: convertTo24Hour(contentTime) || '12:00',
-          platform: contentPlatform.value || 'Instagram',
-          type: contentType.value || 'Image',
-          audience: contentAudience.value || '',
-          description: contentDescription.value || '',
-          caption: contentCaption.value || '',
-          createdAt: new Date().toISOString()
-        };
-
-        if (editingContentId) {
-          contentItems = contentItems.map(item => item.id === editingContentId ? content : item);
-        } else {
-          contentItems.push(content);
+        // Navigate to previous or next week
+        function navigateWeek(direction) {
+            currentWeekOffset += direction;
+            initCalendar();
+            renderContent();
         }
 
-        saveContentToStorage();
-        renderWeekView();
-        closeContentModal();
-        showToast('Content saved successfully');
-        
-        // Reset button state
-        saveBtnText.style.display = 'inline-block';
-        saveBtnSpinner.style.display = 'none';
-        saveBtn.disabled = false;
-      }, 500);
-    }
-
-    function deleteContent() {
-      if (!editingContentId) return;
-
-      if (confirm('Are you sure you want to delete this content?')) {
-        contentItems = contentItems.filter(item => item.id !== editingContentId);
-        saveContentToStorage();
-        renderWeekView();
-        closeContentModal();
-        showToast('Content deleted');
-      }
-    }
-
-    // Quick Add Panel
-    function openQuickAddPanel() {
-      quickAddPanel.style.display = 'block';
-      quickAddForm.reset();
-    }
-
-    function closeQuickAddPanel() {
-      quickAddPanel.style.display = 'none';
-    }
-
-    function handleQuickAdd(e) {
-      e.preventDefault();
-      
-      const title = document.getElementById('quickTitle').value;
-      const platform = document.getElementById('quickPlatform').value;
-      const type = document.getElementById('quickType').value;
-      
-      if (!title) {
-        showToast('Please enter a title');
-        return;
-      }
-      
-      // Use proper time slot format
-      const today = new Date();
-      const nextHourIndex = Math.min(timeSlots.length - 1, Math.max(0, today.getHours() - 8 + 1));
-      const timeString = timeSlots[nextHourIndex];
-      
-      const content = {
-        id: Date.now(),
-        title: title,
-        date: formatDateForData(today),
-        time: convertTo24Hour(timeString) || '12:00',
-        platform: platform,
-        type: type,
-        audience: '',
-        description: '',
-        caption: '',
-        createdAt: new Date().toISOString()
-      };
-      
-      contentItems.push(content);
-      saveContentToStorage();
-      renderWeekView();
-      closeQuickAddPanel();
-      showToast('Content added successfully');
-      
-      // Navigate to current week if not already there
-      currentDate = new Date();
-      renderWeekView();
-    }
-
-    // Content Preview
-    function showContentPreview() {
-      if (contentItems.length === 0) {
-        showToast('No content to display');
-        return;
-      }
-      
-      // Sort content by date and time - FIXED THE SYNTAX ERROR HERE
-      const sortedContent = [...contentItems].sort((a, b) => {
-        const dateA = new Date(`${a.date}T${a.time}`);
-        const dateB = new Date(`${b.date}T${b.time}`);
-        return dateA - dateB;
-      });
-      
-      // Group content by date
-      const contentByDate = {};
-      sortedContent.forEach(item => {
-        if (!contentByDate[item.date]) {
-          contentByDate[item.date] = [];
+        // Go to current week
+        function goToToday() {
+            currentWeekOffset = 0;
+            initCalendar();
+            renderContent();
         }
-        contentByDate[item.date].push(item);
-      });
-      
-      // Generate preview HTML
-      let previewHTML = '';
-      
-      Object.keys(contentByDate).sort().forEach(date => {
-        previewHTML += `<div class="preview-item">
-          <h4>${formatDate(new Date(date))}</h4>`;
-        
-        contentByDate[date].forEach(item => {
-          const time = convertTo12Hour(item.time);
-          previewHTML += `
-            <div class="preview-item">
-              <p><strong>${time}</strong>: ${item.title}</p>
-              <div class="preview-meta">
-                <span class="preview-tag">${item.platform}</span>
-                <span class="preview-tag">${item.type}</span>
-                ${item.audience ? `<span class="preview-tag">${item.audience}</span>` : ''}
-              </div>
-            </div>
-          `;
-        });
-        
-        previewHTML += `</div>`;
-      });
-      
-      previewContent.innerHTML = previewHTML;
-      contentPreview.style.display = 'block';
-    }
 
-    function closeContentPreview() {
-      contentPreview.style.display = 'none';
-    }
+        // Show PWA install prompt
+        function showInstallPrompt() {
+            if (window.deferredPrompt) {
+                const installPrompt = document.getElementById('install-prompt');
+                installPrompt.style.display = 'block';
+            }
+        }
 
-    // Tutorial
-    function toggleTutorial() {
-      tutorialContent.style.display = tutorialContent.style.display === 'block' ? 'none' : 'block';
-    }
+        // Dismiss install prompt
+        function dismissInstallPrompt() {
+            const installPrompt = document.getElementById('install-prompt');
+            installPrompt.style.display = 'none';
+        }
 
-    function closeTutorial() {
-      tutorialContent.style.display = 'none';
-    }
+        // Install PWA
+        function installPWA() {
+            const installPrompt = document.getElementById('install-prompt');
+            
+            if (!window.deferredPrompt) {
+                installPrompt.style.display = 'none';
+                return;
+            }
+            
+            window.deferredPrompt.prompt();
+            
+            window.deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                } else {
+                    console.log('User dismissed the install prompt');
+                }
+                window.deferredPrompt = null;
+                installPrompt.style.display = 'none';
+            });
+        }
 
-    // Filter functionality
-    function applyFilters() {
-      renderWeekView();
-      
-      // Show if filters are active
-      if (platformFilter.value || typeFilter.value) {
-        filterBar.style.backgroundColor = 'rgba(233, 196, 106, 0.1)';
-        filterBar.style.padding = '10px';
-        filterBar.style.borderRadius = '6px';
-      } else {
-        filterBar.style.backgroundColor = 'transparent';
-        filterBar.style.padding = '0';
-      }
-    }
+        // Export calendar to PDF
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('landscape', 'px', 'a4');
+            
+            // Capture the calendar container
+            html2canvas(document.querySelector('.calendar-container')).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const imgProps = doc.getImageProperties(imgData);
+                const pdfWidth = doc.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                
+                doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                doc.save('tempest-content-calendar.pdf');
+            });
+        }
 
-    function clearFilters() {
-      platformFilter.value = '';
-      typeFilter.value = '';
-      applyFilters();
-      showToast('Filters cleared');
-    }
+        // Open modal for adding content without clicking a slot
+        function openAddModalWithoutSlot() {
+            const modal = document.getElementById('content-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const form = document.getElementById('content-form');
+            
+            modalTitle.textContent = 'Add Content';
+            form.reset();
+            document.getElementById('content-id').value = '';
+            
+            // Set default date to today
+            const today = new Date();
+            const dateString = today.toISOString().split('T')[0];
+            const timeString = '12:00';
+            
+            document.getElementById('content-date').value = dateString;
+            document.getElementById('content-time').value = timeString;
+            
+            modal.style.display = 'flex';
+            currentEditId = null;
+        }
 
-    // Other Features
-    function changeWeek(direction) {
-      currentDate.setDate(currentDate.getDate() + direction * 7);
-      renderWeekView();
-    }
+        // Open modal for adding content
+        function openAddModal(hour, day) {
+            const modal = document.getElementById('content-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const form = document.getElementById('content-form');
+            
+            modalTitle.textContent = 'Add Content';
+            form.reset();
+            document.getElementById('content-id').value = '';
+            
+            // Get the date for the clicked day
+            const monday = getMondayForWeek(currentWeekOffset);
+            const targetDate = new Date(monday);
+            targetDate.setDate(monday.getDate() + day);
+            
+            // Format date for input field (YYYY-MM-DD)
+            const dateString = targetDate.toISOString().split('T')[0];
+            
+            // Set default time (selected hour)
+            const timeString = `${hour.toString().padStart(2, '0')}:00`;
+            
+            document.getElementById('content-date').value = dateString;
+            document.getElementById('content-time').value = timeString;
+            
+            modal.style.display = 'flex';
+            currentEditId = null;
+        }
 
-    function goToToday() {
-      currentDate = new Date();
-      renderWeekView();
-      showToast('Navigated to current week');
-    }
+        // Open modal for editing content
+        function openEditModal(id) {
+            const item = contentItems.find(item => item.id === id);
+            if (!item) return;
+            
+            const modal = document.getElementById('content-modal');
+            const modalTitle = document.getElementById('modal-title');
+            
+            modalTitle.textContent = 'Edit Content';
+            document.getElementById('content-id').value = item.id;
+            document.getElementById('content-title').value = item.title;
+            document.getElementById('content-description').value = item.description;
+            document.getElementById('content-platform').value = item.platform;
+            document.getElementById('content-type').value = item.type;
+            document.getElementById('content-date').value = item.date;
+            document.getElementById('content-time').value = item.time;
+            
+            modal.style.display = 'flex';
+            currentEditId = id;
+        }
 
-    function addSampleContent() {
-      const platforms = ['Instagram', 'Facebook', 'Twitter', 'LinkedIn', 'YouTube'];
-      const types = ['Image', 'Video', 'Carousel', 'Story', 'Article'];
-      const audiences = ['Awareness', 'Consideration', 'Decision', 'Retention'];
+        // Close modal
+        function closeModal() {
+            document.getElementById('content-modal').style.display = 'none';
+        }
 
-      for (let i = 0; i < 8; i++) {
-        const randomDate = new Date();
-        randomDate.setDate(randomDate.getDate() + Math.floor(Math.random() * 14));
-        const randomTimeSlot = timeSlots[Math.floor(Math.random() * timeSlots.length)];
+        // Save content (add or edit)
+        function saveContent(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('content-id').value || generateId();
+            const title = document.getElementById('content-title').value;
+            const description = document.getElementById('content-description').value;
+            const platform = document.getElementById('content-platform').value;
+            const type = document.getElementById('content-type').value;
+            const date = document.getElementById('content-date').value;
+            const time = document.getElementById('content-time').value;
+            
+            const contentItem = {
+                id,
+                title,
+                description,
+                platform,
+                type,
+                date,
+                time
+            };
+            
+            if (currentEditId) {
+                // Update existing item
+                const index = contentItems.findIndex(item => item.id === currentEditId);
+                if (index !== -1) {
+                    contentItems[index] = contentItem;
+                }
+            } else {
+                // Add new item
+                contentItems.push(contentItem);
+            }
+            
+            saveToLocalStorage();
+            renderContent();
+            closeModal();
+        }
 
-        contentItems.push({
-          id: Date.now() + i,
-          title: `Sample Content ${i + 1}`,
-          date: formatDateForData(randomDate),
-          time: convertTo24Hour(randomTimeSlot),
-          platform: platforms[Math.floor(Math.random() * platforms.length)],
-          type: types[Math.floor(Math.random() * types.length)],
-          audience: audiences[Math.floor(Math.random() * audiences.length)],
-          description: 'Sample content for demonstration.',
-          caption: 'This is a sample caption.'
-        });
-      }
+        // Delete content
+        function deleteContent(id) {
+            if (confirm('Are you sure you want to delete this content?')) {
+                contentItems = contentItems.filter(item => item.id !== id);
+                saveToLocalStorage();
+                renderContent();
+            }
+        }
 
-      saveContentToStorage();
-      renderWeekView();
-      showToast('Sample content added');
-    }
+        // Generate a unique ID
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
 
-    // PWA Installation
-    function setupPWA() {
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installBtn.style.display = 'inline-block';
-      });
+        // Save content to localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('tempestContentCalendar', JSON.stringify(contentItems));
+        }
 
-      window.addEventListener('appinstalled', () => {
-        installBtn.style.display = 'none';
-        deferredPrompt = null;
-        showToast('App installed successfully!');
-      });
-    }
+        // Load content from localStorage
+        function loadContent() {
+            const storedContent = localStorage.getItem('tempestContentCalendar');
+            if (storedContent) {
+                contentItems = JSON.parse(storedContent);
+                renderContent();
+            }
+        }
 
-    function installPWA() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(choiceResult => {
-          if (choiceResult.outcome === 'accepted') {
-            installBtn.style.display = 'none';
-          }
-          deferredPrompt = null;
-        });
-      }
-    }
+        // Render all content items on calendar and preview
+        function renderContent() {
+            clearCalendar();
+            renderCalendarItems();
+            renderPreviewItems();
+        }
 
-    // Utility Functions
-    function handlePrint() {
-      window.print();
-    }
+        // Clear the calendar
+        function clearCalendar() {
+            document.querySelectorAll('.content-item').forEach(item => item.remove());
+        }
 
-    function exportAsPdf() {
-      showToast('Exporting to PDF... (This is a demo)');
-      // In a real app, you would use a library like jsPDF or window.print() with PDF printing
-    }
+        // Render content items on the calendar
+        function renderCalendarItems() {
+            const filteredItems = filterItems();
+            
+            filteredItems.forEach(item => {
+                const date = new Date(item.date);
+                const monday = getMondayForWeek(currentWeekOffset);
+                const sunday = new Date(monday);
+                sunday.setDate(monday.getDate() + 6);
+                
+                // Only render if item is in the current week view
+                if (date >= monday && date <= sunday) {
+                    const dayOfWeek = (date.getDay() + 6) % 7; // Convert to 0-6 (Mon-Sun)
+                    
+                    const hour = parseInt(item.time.split(':')[0]);
+                    const minute = parseInt(item.time.split(':')[1]);
+                    const height = 60; // 60px per hour
+                    const top = (hour - 8) * height + (minute / 60) * height;
+                    
+                    const slot = document.querySelector(`.time-slot[data-day="${dayOfWeek}"][data-hour="${hour}"]`);
+                    
+                    if (slot) {
+                        const contentElement = document.createElement('div');
+                        contentElement.className = `content-item platform-${item.platform} type-${item.type}`;
+                        contentElement.style.top = `${top}px`;
+                        contentElement.style.height = `${height}px`;
+                        contentElement.style.width = 'calc(100% - 10px)';
+                        contentElement.draggable = true;
+                        contentElement.dataset.id = item.id;
+                        
+                        contentElement.innerHTML = `
+                            <div class="content-title">${item.title}</div>
+                            <div class="content-details">${item.platform} • ${item.type}</div>
+                        `;
+                        
+                        contentElement.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            openEditModal(item.id);
+                        });
+                        
+                        // Drag and drop functionality
+                        contentElement.addEventListener('dragstart', handleDragStart);
+                        contentElement.addEventListener('dragover', handleDragOver);
+                        contentElement.addEventListener('dragenter', handleDragEnter);
+                        contentElement.addEventListener('dragleave', handleDragLeave);
+                        contentElement.addEventListener('drop', handleDrop);
+                        contentElement.addEventListener('dragend', handleDragEnd);
+                        
+                        slot.appendChild(contentElement);
+                    }
+                }
+            });
+        }
 
-    function showToast(message) {
-      toast.textContent = message;
-      toast.style.display = 'block';
-      setTimeout(() => {
-        toast.style.display = 'none';
-      }, 3000);
-    }
+        // Render preview items
+        function renderPreviewItems() {
+            const previewList = document.getElementById('preview-list');
+            const filteredItems = filterItems();
+            
+            if (filteredItems.length === 0) {
+                previewList.innerHTML = '<div class="empty-state">No content to display. Add some content to your calendar!</div>';
+                return;
+            }
+            
+            previewList.innerHTML = '';
+            
+            filteredItems
+                .sort((a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time))
+                .forEach(item => {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = `preview-item platform-${item.platform} type-${item.type}`;
+                    
+                    const date = new Date(item.date);
+                    const formattedDate = date.toLocaleDateString('en-US', { 
+                        weekday: 'short', 
+                        month: 'short', 
+                        day: 'numeric' 
+                    });
+                    
+                    previewItem.innerHTML = `
+                        <div class="preview-item-header">
+                            <span class="preview-date">${formattedDate} at ${item.time}</span>
+                            <div>
+                                <span class="preview-platform platform-${item.platform}">${item.platform}</span>
+                                <span class="preview-type type-${item.type}">${item.type}</span>
+                            </div>
+                        </div>
+                        <div class="preview-title">${item.title}</div>
+                        <div class="preview-description">${item.description}</div>
+                        <div class="preview-actions">
+                            <button class="btn-primary" onclick="openEditModal('${item.id}')"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn-danger" onclick="deleteContent('${item.id}')"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    `;
+                    
+                    previewList.appendChild(previewItem);
+                });
+        }
 
-    function formatDate(date) {
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    }
+        // Filter content based on selected platform and type
+        function filterItems() {
+            const platformFilter = document.getElementById('platform-filter').value;
+            const typeFilter = document.getElementById('type-filter').value;
+            
+            return contentItems.filter(item => {
+                return (platformFilter === 'all' || item.platform === platformFilter) &&
+                       (typeFilter === 'all' || item.type === typeFilter);
+            });
+        }
 
-    function formatShortDate(date) {
-      return date.getDate();
-    }
+        // Apply filters and re-render content
+        function filterContent() {
+            renderContent();
+        }
 
-    function formatDateForData(date) {
-      if (typeof date === 'string') return date;
-      const d = new Date(date);
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    }
+        // Drag and drop functions
+        function handleDragStart(e) {
+            dragSrcElement = this;
+            e.dataTransfer.setData('text/plain', this.dataset.id);
+            this.style.opacity = '0.4';
+        }
 
-    function convertTo24Hour(time12h) {
-      if (!time12h) return '12:00';
-      if (!time12h.includes(' ')) return time12h; // Already in 24h format
-      
-      const [time, modifier] = time12h.split(' ');
-      let [hours, minutes] = time.split(':');
-      
-      if (hours === '12') {
-        hours = '00';
-      }
-      
-      if (modifier === 'PM') {
-        hours = parseInt(hours, 10) + 12;
-      }
-      
-      // Ensure two-digit format
-      hours = String(hours).padStart(2, '0');
-      minutes = minutes || '00';
-      
-      return `${hours}:${minutes}`;
-    }
+        function handleDragOver(e) {
+            e.preventDefault();
+            return false;
+        }
 
-    function convertTo12Hour(time24h) {
-      if (!time24h) return '12:00 PM';
-      if (time24h.includes(' ')) return time24h; // Already in 12h format
-      
-      let [hours, minutes] = time24h.split(':');
-      hours = parseInt(hours, 10);
-      const modifier = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12;
-      return `${hours}:${minutes || '00'} ${modifier}`;
-    }
+        function handleDragEnter(e) {
+            this.classList.add('over');
+        }
 
-    function createContentElement(item) {
-      const contentEl = document.createElement('div');
-      contentEl.className = 'content-item';
-      contentEl.dataset.id = item.id;
-      contentEl.draggable = true;
-      
-      // Add platform color indicator
-      const platformIndicator = document.createElement('div');
-      platformIndicator.className = `platform-color-indicator platform-${item.platform.toLowerCase()}`;
-      contentEl.appendChild(platformIndicator);
-      
-      // Add drag handle
-      const dragHandle = document.createElement('div');
-      dragHandle.className = 'drag-handle';
-      dragHandle.innerHTML = '<i class="fas fa-grip-lines"></i>';
-      contentEl.appendChild(dragHandle);
-      
-      contentEl.innerHTML += `
-        <div class="content-title">${item.title}</div>
-        <div class="content-meta">
-          <span class="content-tag"><i class="fas fa-${getPlatformIcon(item.platform)}"></i> ${item.platform}</span>
-          <span class="content-tag">${item.type}</span>
-          ${item.audience ? `<span class="content-tag">${item.audience}</span>` : ''}
-        </div>
-      `;
-      contentEl.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openEditContentModal(item.id);
-      });
-      return contentEl;
-    }
+        function handleDragLeave() {
+            this.classList.remove('over');
+        }
 
-    function getPlatformIcon(platform) {
-      const icons = {
-        Instagram: 'camera',
-        Facebook: 'facebook',
-        Twitter: 'twitter',
-        LinkedIn: 'linkedin',
-        YouTube: 'youtube',
-        TikTok: 'music',
-        Pinterest: 'pinterest',
-        Blog: 'blog',
-        Email: 'envelope'
-      };
-      return icons[platform] || 'globe';
-    }
+        function handleDrop(e) {
+            e.preventDefault();
+            
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            
+            const id = e.dataTransfer.getData('text/plain');
+            const contentItem = contentItems.find(item => item.id === id);
+            
+            if (contentItem && this.classList.contains('time-slot')) {
+                const day = parseInt(this.dataset.day);
+                const hour = parseInt(this.dataset.hour);
+                
+                // Get the date for the dropped day
+                const monday = getMondayForWeek(currentWeekOffset);
+                const targetDate = new Date(monday);
+                targetDate.setDate(monday.getDate() + day);
+                
+                // Format date for input field (YYYY-MM-DD)
+                const dateString = targetDate.toISOString().split('T')[0];
+                
+                // Update time
+                const newTime = `${hour.toString().padStart(2, '0')}:00`;
+                
+                // Update content item
+                contentItem.date = dateString;
+                contentItem.time = newTime;
+                
+                saveToLocalStorage();
+                renderContent();
+            }
+            
+            return false;
+        }
 
-    // Initialize
-    window.addEventListener('DOMContentLoaded', initApp);
-  </script>
+        function handleDragEnd() {
+            this.style.opacity = '1';
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('over');
+            });
+        }
+
+        // Make functions available globally for onclick attributes
+        window.openEditModal = openEditModal;
+        window.deleteContent = deleteContent;
+    </script>
 </body>
 </html>
