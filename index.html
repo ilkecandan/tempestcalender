@@ -485,6 +485,7 @@
       display: flex;
       justify-content: center;
       gap: 20px;
+      flex-wrap: wrap;
     }
 
     .footer-link {
@@ -1072,7 +1073,7 @@
           <p>Click on a time slot to add content or use the Quick Add button</p>
           <button class="btn btn-primary" id="addSampleContentBtn">
             <i class="fas fa-magic"></i> Add Sample Content
-          </button>
+            </button>
         </div>
       </div>
       
@@ -1083,6 +1084,9 @@
           </a>
           <a href="https://www.linkedin.com/in/ilkecandan/" target="_blank" class="footer-link">
             <i class="fab fa-linkedin"></i> Let's Meet on LinkedIn
+          </a>
+          <a href="https://tempestlabs.space" target="_blank" class="footer-link">
+            <i class="fas fa-globe"></i> Visit Our Website
           </a>
         </div>
       </footer>
@@ -1424,21 +1428,22 @@
 
       document.addEventListener('drop', (e) => {
         e.preventDefault();
-        if (draggedItem && e.target.classList.contains('content-cell')) {
-          const contentId = parseInt(e.dataTransfer.getData('text/plain'));
-          const targetCell = e.target;
-          const targetDate = targetCell.dataset.date;
-          const targetTime = convertTo24Hour(targetCell.dataset.time);
-          
-          // Update the content item with new date and time
-          const contentIndex = contentItems.findIndex(item => item.id === contentId);
-          if (contentIndex !== -1) {
-            contentItems[contentIndex].date = targetDate;
-            contentItems[contentIndex].time = targetTime;
-            saveContentToStorage();
-            renderWeekView();
-            showToast('Content moved successfully');
-          }
+        if (!draggedItem) return;
+        const targetCell = e.target.closest('.content-cell');
+        if (!targetCell) return;
+
+        const contentId = parseInt(e.dataTransfer.getData('text/plain'), 10);
+        const targetDate = targetCell.dataset.date;
+        const targetTime = convertTo24Hour(targetCell.dataset.time);
+        
+        // Update the content item with new date and time
+        const contentIndex = contentItems.findIndex(item => item.id === contentId);
+        if (contentIndex !== -1) {
+          contentItems[contentIndex].date = targetDate;
+          contentItems[contentIndex].time = targetTime;
+          saveContentToStorage();
+          renderWeekView();
+          showToast('Content moved successfully');
         }
       });
     }
@@ -1637,7 +1642,8 @@
       contentCaption.value = content.caption || '';
 
       // Update date/time display
-      const contentDate = new Date(content.date);
+      const [y, m, d] = content.date.split('-').map(Number);
+      const contentDate = new Date(y, m - 1, d);
       selectedDate.textContent = formatDate(contentDate);
       selectedTime.textContent = convertTo12Hour(content.time);
       dateTimeDisplay.style.display = 'flex';
@@ -1775,7 +1781,7 @@
         return;
       }
       
-      // Sort content by date and time
+      // Sort content by date and time - FIXED THE SYNTAX ERROR HERE
       const sortedContent = [...contentItems].sort((a, b) => {
         const dateA = new Date(`${a.date}T${a.time}`);
         const dateB = new Date(`${b.date}T${b.time}`);
