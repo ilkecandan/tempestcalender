@@ -410,7 +410,7 @@
       min-width: 200px;
     }
 
-    .form-group full-width {
+    .form-group.full-width {
       flex: 0 0 100%;
     }
 
@@ -757,6 +757,7 @@
     .preview-item h4 {
       color: var(--primary);
       margin-bottom: 5px;
+      font-size: 1.1rem;
     }
 
     .preview-item p {
@@ -951,6 +952,9 @@
       gap: 10px;
       margin-bottom: 15px;
       align-items: center;
+      padding: 10px 20px;
+      background: rgba(233, 196, 106, 0.05);
+      border-radius: 8px;
     }
 
     .filter-select {
@@ -1489,9 +1493,11 @@
           const dateStr = formatDateForData(dayDate);
           const time24h = convertTo24Hour(time);
           
-          // Get content for this specific cell
+          // Get content for this specific cell - FIXED LOGIC
           let contentForCell = contentItems.filter(item => {
-            return item.date === dateStr && item.time === time24h;
+            // Ensure we're comparing the same date format
+            const itemDate = formatDateForData(new Date(item.date));
+            return itemDate === dateStr && item.time === time24h;
           });
 
           // Apply filters if any
