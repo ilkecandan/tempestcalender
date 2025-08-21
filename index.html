@@ -1493,11 +1493,9 @@
           const dateStr = formatDateForData(dayDate);
           const time24h = convertTo24Hour(time);
           
-          // Get content for this specific cell - FIXED LOGIC
+          // Get content for this specific cell
           let contentForCell = contentItems.filter(item => {
-            // Ensure we're comparing the same date format
-            const itemDate = formatDateForData(new Date(item.date));
-            return itemDate === dateStr && item.time === time24h;
+            return item.date === dateStr && item.time === time24h;
           });
 
           // Apply filters if any
@@ -1562,14 +1560,13 @@
         const data = localStorage.getItem('contentCalendarData');
         contentItems = data ? JSON.parse(data) : [];
         
-        // Migrate old data format if needed
-        if (contentItems.length > 0 && !contentItems[0].id) {
-          contentItems = contentItems.map(item => ({
-            ...item,
-            id: Date.now() + Math.floor(Math.random() * 1000)
-          }));
-          saveContentToStorage();
-        }
+        // Ensure all items have proper IDs
+        contentItems = contentItems.map(item => {
+          if (!item.id) {
+            return {...item, id: Date.now() + Math.floor(Math.random() * 1000)};
+          }
+          return item;
+        });
       } catch (e) {
         console.error('Error loading content:', e);
         contentItems = [];
@@ -1673,7 +1670,7 @@
 
       // Simulate network delay for better UX feedback
       setTimeout(() => {
-        // FIX: Ensure we always have valid date and time values
+        // Ensure we always have valid date and time values
         const contentDate = selectedCellDate || new Date();
         const contentTime = selectedCellTime || timeSlots[0];
         
@@ -1742,7 +1739,7 @@
         return;
       }
       
-      // FIX: Use proper time slot format instead of arbitrary time
+      // Use proper time slot format
       const today = new Date();
       const nextHourIndex = Math.min(timeSlots.length - 1, Math.max(0, today.getHours() - 8 + 1));
       const timeString = timeSlots[nextHourIndex];
@@ -1953,13 +1950,10 @@
     function formatDateForData(date) {
       if (typeof date === 'string') return date;
       const d = new Date(date);
-      return d.toISOString().split('T')[0];
-    }
-
-    function formatDateForInput(date) {
-      if (typeof date === 'string') return date;
-      const d = new Date(date);
-      return d.toISOString().split('T')[0];
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     }
 
     function convertTo24Hour(time12h) {
@@ -1977,7 +1971,11 @@
         hours = parseInt(hours, 10) + 12;
       }
       
-      return `${hours}:${minutes || '00'}`;
+      // Ensure two-digit format
+      hours = String(hours).padStart(2, '0');
+      minutes = minutes || '00';
+      
+      return `${hours}:${minutes}`;
     }
 
     function convertTo12Hour(time24h) {
