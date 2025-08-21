@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content="Plan your content strategy with Tempest Labs' elegant scrapbook-style calendar"/>
   <title>Tempest Content Planner | Creative Content Calendar</title>
-  <link rel="manifest" href="manifest.json"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet"/>
@@ -620,6 +619,7 @@
       bottom: 20px;
       right: 20px;
       z-index: 100;
+      display: none; /* Hidden by default */
     }
 
     .tutorial-btn {
@@ -1673,11 +1673,15 @@
 
       // Simulate network delay for better UX feedback
       setTimeout(() => {
+        // FIX: Ensure we always have valid date and time values
+        const contentDate = selectedCellDate || new Date();
+        const contentTime = selectedCellTime || timeSlots[0];
+        
         const content = {
           id: editingContentId || Date.now(),
           title: contentTitle.value || 'Untitled Content',
-          date: formatDateForData(selectedCellDate),
-          time: convertTo24Hour(selectedCellTime) || '12:00',
+          date: formatDateForData(contentDate),
+          time: convertTo24Hour(contentTime) || '12:00',
           platform: contentPlatform.value || 'Instagram',
           type: contentType.value || 'Image',
           audience: contentAudience.value || '',
@@ -1738,10 +1742,10 @@
         return;
       }
       
-      // Find the next available slot (today, next available time)
+      // FIX: Use proper time slot format instead of arbitrary time
       const today = new Date();
-      const nextHour = today.getHours() + 1;
-      const timeString = `${nextHour}:00`;
+      const nextHourIndex = Math.min(timeSlots.length - 1, Math.max(0, today.getHours() - 8 + 1));
+      const timeString = timeSlots[nextHourIndex];
       
       const content = {
         id: Date.now(),
@@ -1873,12 +1877,13 @@
       for (let i = 0; i < 8; i++) {
         const randomDate = new Date();
         randomDate.setDate(randomDate.getDate() + Math.floor(Math.random() * 14));
+        const randomTimeSlot = timeSlots[Math.floor(Math.random() * timeSlots.length)];
 
         contentItems.push({
           id: Date.now() + i,
           title: `Sample Content ${i + 1}`,
           date: formatDateForData(randomDate),
-          time: convertTo24Hour(timeSlots[Math.floor(Math.random() * timeSlots.length)]),
+          time: convertTo24Hour(randomTimeSlot),
           platform: platforms[Math.floor(Math.random() * platforms.length)],
           type: types[Math.floor(Math.random() * types.length)],
           audience: audiences[Math.floor(Math.random() * audiences.length)],
