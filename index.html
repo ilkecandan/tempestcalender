@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
     <style>
         * {
             box-sizing: border-box;
@@ -299,6 +300,14 @@
             margin-left: 5px;
         }
 
+        .preview-funnel {
+            background: rgba(139, 157, 184, 0.1);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
         .preview-title {
             font-weight: bold;
             margin-bottom: 5px;
@@ -430,17 +439,70 @@
         }
 
         /* Platform and type color palette */
-        .platform-instagram { border-left-color: #d4a5c5; color: #d4a5c5; }
-        .platform-facebook { border-left-color: #9cadce; color: #9cadce; }
-        .platform-twitter { border-left-color: #a5c0e5; color: #a5c0e5; }
-        .platform-linkedin { border-left-color: #7b9acc; color: #7b9acc; }
-        .platform-youtube { border-left-color: #ccae7b; color: #ccae7b; }
+        .platform-instagram { border-left-color: #d62976; color: #d62976; }
+        .platform-facebook { border-left-color: #3b5998; color: #3b5998; }
+        .platform-twitter { border-left-color: #1da1f2; color: #1da1f2; }
+        .platform-linkedin { border-left-color: #0077b5; color: #0077b5; }
+        .platform-youtube { border-left-color: #ff0000; color: #ff0000; }
+        .platform-tiktok { border-left-color: #000000; color: #000000; }
+        .platform-pinterest { border-left-color: #bd081c; color: #bd081c; }
+        .platform-snapchat { border-left-color: #fffc00; color: #fffc00; }
+        .platform-reddit { border-left-color: #ff4500; color: #ff4500; }
+        .platform-threads { border-left-color: #000000; color: #000000; }
+        .platform-discord { border-left-color: #5865f2; color: #5865f2; }
+        .platform-twitch { border-left-color: #9146ff; color: #9146ff; }
+        .platform-telegram { border-left-color: #0088cc; color: #0088cc; }
+        .platform-whatsapp { border-left-color: #25d366; color: #25d366; }
+        .platform-wechat { border-left-color: #07c160; color: #07c160; }
+        .platform-medium { border-left-color: #000000; color: #000000; }
+        .platform-substack { border-left-color: #ff6719; color: #ff6719; }
+        .platform-wordpress { border-left-color: #21759b; color: #21759b; }
+        .platform-blogger { border-left-color: #f57d00; color: #f57d00; }
+        .platform-github { border-left-color: #333333; color: #333333; }
+        .platform-soundcloud { border-left-color: #ff7700; color: #ff7700; }
+        .platform-spotify { border-left-color: #1db954; color: #1db954; }
+        .platform-bandcamp { border-left-color: #629aa9; color: #629aa9; }
+        .platform-goodreads { border-left-color: #553b08; color: #553b08; }
+        .platform-behance { border-left-color: #1769ff; color: #1769ff; }
+        .platform-dribbble { border-left-color: #ea4c89; color: #ea4c89; }
+        .platform-vimeo { border-left-color: #1ab7ea; color: #1ab7ea; }
+        .platform-patreon { border-left-color: #ff424d; color: #ff424d; }
+        .platform-ko-fi { border-left-color: #ff5e5b; color: #ff5e5b; }
+        .platform-mastodon { border-left-color: #6364ff; color: #6364ff; }
+        .platform-bluesky { border-left-color: #0285ff; color: #0285ff; }
+        .platform-signal { border-left-color: #3a76f0; color: #3a76f0; }
+        .platform-personalwebsite { border-left-color: #5a6b8c; color: #5a6b8c; }
+        .platform-portfolio { border-left-color: #7b9acc; color: #7b9acc; }
+        .platform-newsletter { border-left-color: #8fb0d9; color: #8fb0d9; }
 
         .type-post { border-left-color: #9b8fcc; color: #9b8fcc; }
         .type-story { border-left-color: #ccae7b; color: #ccae7b; }
         .type-video { border-left-color: #c98b8b; color: #c98b8b; }
         .type-reel { border-left-color: #8b9ecc; color: #8b9ecc; }
         .type-carousel { border-left-color: #7bccae; color: #7bccae; }
+        .type-live { border-left-color: #cc7b7b; color: #cc7b7b; }
+        .type-podcast { border-left-color: #7b7bcc; color: #7b7bcc; }
+        .type-article { border-left-color: #7bcc7b; color: #7bcc7b; }
+        .type-newsletter { border-left-color: #cccc7b; color: #cccc7b; }
+        .type-thread { border-left-color: #cc7bcc; color: #cc7bcc; }
+        .type-comment { border-left-color: #7bcccc; color: #7bcccc; }
+        .type-meme { border-left-color: #cccccc; color: #cccccc; }
+        .type-gif { border-left-color: #cc7b7b; color: #cc7b7b; }
+        .type-poll { border-left-color: #7b7b7b; color: #7b7b7b; }
+        .type-event { border-left-color: #7b7bcc; color: #7b7bcc; }
+        .type-portfolio { border-left-color: #7bcc7b; color: #7bcc7b; }
+        .type-music { border-left-color: #cc7bcc; color: #cc7bcc; }
+        .type-photo { border-left-color: #7bcccc; color: #7bcccc; }
+        .type-link { border-left-color: #cccc7b; color: #cccc7b; }
+        .type-review { border-left-color: #cc7b7b; color: #cc7b7b; }
+        .type-collab { border-left-color: #7b7bcc; color: #7b7bcc; }
+        .type-ad { border-left-color: #cc7b7b; color: #cc7b7b; }
+
+        .funnel-awareness { border-left-color: #5a6b8c; color: #5a6b8c; }
+        .funnel-consideration { border-left-color: #7b9acc; color: #7b9acc; }
+        .funnel-conversion { border-left-color: #8fb0d9; color: #8fb0d9; }
+        .funnel-retention { border-left-color: #a5c0e5; color: #a5c0e5; }
+        .funnel-advocacy { border-left-color: #c5d4eb; color: #c5d4eb; }
 
         /* Calendar date headers */
         .calendar-date {
@@ -605,68 +667,74 @@
                 <div class="filters">
                     <select id="platform-filter">
                         <option value="all">All Platforms</option>
-        <option value="instagram">Instagram</option>
-<option value="facebook">Facebook</option>
-<option value="twitter">Twitter (X)</option>
-<option value="linkedin">LinkedIn</option>
-<option value="youtube">YouTube</option>
-<option value="tiktok">TikTok</option>
-<option value="snapchat">Snapchat</option>
-<option value="pinterest">Pinterest</option>
-<option value="reddit">Reddit</option>
-<option value="threads">Threads</option>
-<option value="discord">Discord</option>
-<option value="twitch">Twitch</option>
-<option value="telegram">Telegram</option>
-<option value="whatsapp">WhatsApp</option>
-<option value="wechat">WeChat</option>
-<option value="medium">Medium</option>
-<option value="substack">Substack</option>
-<option value="wordpress">WordPress</option>
-<option value="blogger">Blogger</option>
-<option value="github">GitHub</option>
-<option value="soundcloud">SoundCloud</option>
-<option value="spotify">Spotify</option>
-<option value="bandcamp">Bandcamp</option>
-<option value="goodreads">Goodreads</option>
-<option value="behance">Behance</option>
-<option value="dribbble">Dribbble</option>
-<option value="vimeo">Vimeo</option>
-<option value="patreon">Patreon</option>
-<option value="ko-fi">Ko-fi</option>
-<option value="mastodon">Mastodon</option>
-<option value="bluesky">Bluesky</option>
-<option value="signal">Signal</option>
-<option value="personalwebsite">Personal Website</option>
-<option value="portfolio"> WebSite</option>
-<option value="newsletter">Email Newsletter</option>
-
+                        <option value="instagram">Instagram</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="twitter">Twitter (X)</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="snapchat">Snapchat</option>
+                        <option value="pinterest">Pinterest</option>
+                        <option value="reddit">Reddit</option>
+                        <option value="threads">Threads</option>
+                        <option value="discord">Discord</option>
+                        <option value="twitch">Twitch</option>
+                        <option value="telegram">Telegram</option>
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="wechat">WeChat</option>
+                        <option value="medium">Medium</option>
+                        <option value="substack">Substack</option>
+                        <option value="wordpress">WordPress</option>
+                        <option value="blogger">Blogger</option>
+                        <option value="github">GitHub</option>
+                        <option value="soundcloud">SoundCloud</option>
+                        <option value="spotify">Spotify</option>
+                        <option value="bandcamp">Bandcamp</option>
+                        <option value="goodreads">Goodreads</option>
+                        <option value="behance">Behance</option>
+                        <option value="dribbble">Dribbble</option>
+                        <option value="vimeo">Vimeo</option>
+                        <option value="patreon">Patreon</option>
+                        <option value="ko-fi">Ko-fi</option>
+                        <option value="mastodon">Mastodon</option>
+                        <option value="bluesky">Bluesky</option>
+                        <option value="signal">Signal</option>
+                        <option value="personalwebsite">Personal Website</option>
+                        <option value="portfolio">Portfolio Website</option>
+                        <option value="newsletter">Email Newsletter</option>
                     </select>
                     <select id="type-filter">
-     <option value="all">All Types</option>
-<option value="post">Post</option>
-<option value="story">Story</option>
-<option value="video">Video</option>
-<option value="reel">Reel / Short</option>
-<option value="carousel">Carousel</option>
-<option value="live">Live Stream</option>
-<option value="podcast">Podcast / Audio</option>
-<option value="article">Article / Blog</option>
-<option value="newsletter">Newsletter</option>
-<option value="thread">Thread</option>
-<option value="comment">Comment / Reply</option>
-<option value="meme">Meme</option>
-<option value="gif">GIF / Sticker</option>
-<option value="poll">Poll / Survey</option>
-<option value="event">Event / Webinar</option>
-<option value="portfolio">Portfolio / Showcase</option>
-<option value="music">Music / Track</option>
-<option value="photo">Photo / Gallery</option>
-<option value="link">Link / Resource</option>
-<option value="review">Review / Testimonial</option>
-<option value="collab">Collab / Duet / Remix</option>
-<option value="ad">Ad / Sponsored</option>
-
+                        <option value="all">All Types</option>
+                        <option value="post">Post</option>
+                        <option value="story">Story</option>
+                        <option value="video">Video</option>
+                        <option value="reel">Reel / Short</option>
+                        <option value="carousel">Carousel</option>
+                        <option value="live">Live Stream</option>
+                        <option value="podcast">Podcast / Audio</option>
+                        <option value="article">Article / Blog</option>
+                        <option value="newsletter">Newsletter</option>
+                        <option value="thread">Thread</option>
+                        <option value="comment">Comment / Reply</option>
+                        <option value="meme">Meme</option>
+                        <option value="gif">GIF / Sticker</option>
+                        <option value="poll">Poll / Survey</option>
+                        <option value="event">Event / Webinar</option>
+                        <option value="portfolio">Portfolio / Showcase</option>
+                        <option value="music">Music / Track</option>
+                        <option value="photo">Photo / Gallery</option>
+                        <option value="link">Link / Resource</option>
+                        <option value="review">Review / Testimonial</option>
+                        <option value="collab">Collab / Duet / Remix</option>
+                        <option value="ad">Ad / Sponsored</option>
+                    </select>
+                    <select id="funnel-filter">
+                        <option value="all">All Funnel Stages</option>
+                        <option value="awareness">Awareness</option>
+                        <option value="consideration">Consideration</option>
+                        <option value="conversion">Conversion</option>
+                        <option value="retention">Retention</option>
+                        <option value="advocacy">Advocacy</option>
                     </select>
                     <button id="export-pdf" class="btn-export"><i class="fas fa-file-pdf"></i> Export PDF</button>
                 </div>
@@ -708,7 +776,7 @@
                     <i class="fas fa-coffee"></i> Support Us
                 </a>
             </div>
-            <div class="app-version">v1.1.0</div>
+            <div class="app-version">v2.0.0</div>
         </footer>
     </div>
 
@@ -733,19 +801,76 @@
                     <select id="content-platform" required>
                         <option value="instagram">Instagram</option>
                         <option value="facebook">Facebook</option>
-                        <option value="twitter">Twitter</option>
+                        <option value="twitter">Twitter (X)</option>
                         <option value="linkedin">LinkedIn</option>
                         <option value="youtube">YouTube</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="snapchat">Snapchat</option>
+                        <option value="pinterest">Pinterest</option>
+                        <option value="reddit">Reddit</option>
+                        <option value="threads">Threads</option>
+                        <option value="discord">Discord</option>
+                        <option value="twitch">Twitch</option>
+                        <option value="telegram">Telegram</option>
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="wechat">WeChat</option>
+                        <option value="medium">Medium</option>
+                        <option value="substack">Substack</option>
+                        <option value="wordpress">WordPress</option>
+                        <option value="blogger">Blogger</option>
+                        <option value="github">GitHub</option>
+                        <option value="soundcloud">SoundCloud</option>
+                        <option value="spotify">Spotify</option>
+                        <option value="bandcamp">Bandcamp</option>
+                        <option value="goodreads">Goodreads</option>
+                        <option value="behance">Behance</option>
+                        <option value="dribbble">Dribbble</option>
+                        <option value="vimeo">Vimeo</option>
+                        <option value="patreon">Patreon</option>
+                        <option value="ko-fi">Ko-fi</option>
+                        <option value="mastodon">Mastodon</option>
+                        <option value="bluesky">Bluesky</option>
+                        <option value="signal">Signal</option>
+                        <option value="personalwebsite">Personal Website</option>
+                        <option value="portfolio">Portfolio Website</option>
+                        <option value="newsletter">Email Newsletter</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="content-type">Type</label>
+                    <label for="content-type">Content Type</label>
                     <select id="content-type" required>
                         <option value="post">Post</option>
                         <option value="story">Story</option>
                         <option value="video">Video</option>
-                        <option value="reel">Reel</option>
+                        <option value="reel">Reel / Short</option>
                         <option value="carousel">Carousel</option>
+                        <option value="live">Live Stream</option>
+                        <option value="podcast">Podcast / Audio</option>
+                        <option value="article">Article / Blog</option>
+                        <option value="newsletter">Newsletter</option>
+                        <option value="thread">Thread</option>
+                        <option value="comment">Comment / Reply</option>
+                        <option value="meme">Meme</option>
+                        <option value="gif">GIF / Sticker</option>
+                        <option value="poll">Poll / Survey</option>
+                        <option value="event">Event / Webinar</option>
+                        <option value="portfolio">Portfolio / Showcase</option>
+                        <option value="music">Music / Track</option>
+                        <option value="photo">Photo / Gallery</option>
+                        <option value="link">Link / Resource</option>
+                        <option value="review">Review / Testimonial</option>
+                        <option value="collab">Collab / Duet / Remix</option>
+                        <option value="ad">Ad / Sponsored</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="content-funnel">Funnel Stage</label>
+                    <select id="content-funnel" required>
+                        <option value="awareness">Awareness</option>
+                        <option value="consideration">Consideration</option>
+                        <option value="conversion">Conversion</option>
+                        <option value="retention">Retention</option>
+                        <option value="advocacy">Advocacy</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -783,8 +908,22 @@
             if (window.matchMedia('(display-mode: standalone)').matches) {
                 console.log('Running as PWA');
             } else {
-                // Show install prompt after a delay
-                setTimeout(showInstallPrompt, 10000);
+                // Check if user previously dismissed the prompt
+                if (!localStorage.getItem('installPromptDismissed')) {
+                    // Show install prompt after a delay
+                    setTimeout(showInstallPrompt, 10000);
+                }
+            }
+            
+            // Register service worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
             }
         });
 
@@ -894,6 +1033,7 @@
             // Filters
             document.getElementById('platform-filter').addEventListener('change', filterContent);
             document.getElementById('type-filter').addEventListener('change', filterContent);
+            document.getElementById('funnel-filter').addEventListener('change', filterContent);
             
             // PDF Export
             document.getElementById('export-pdf').addEventListener('click', exportToPDF);
@@ -943,6 +1083,7 @@
         function dismissInstallPrompt() {
             const installPrompt = document.getElementById('install-prompt');
             installPrompt.style.display = 'none';
+            localStorage.setItem('installPromptDismissed', 'true');
         }
 
         // Install PWA
@@ -1048,6 +1189,7 @@
             document.getElementById('content-description').value = item.description;
             document.getElementById('content-platform').value = item.platform;
             document.getElementById('content-type').value = item.type;
+            document.getElementById('content-funnel').value = item.funnel;
             document.getElementById('content-date').value = item.date;
             document.getElementById('content-time').value = item.time;
             
@@ -1069,6 +1211,7 @@
             const description = document.getElementById('content-description').value;
             const platform = document.getElementById('content-platform').value;
             const type = document.getElementById('content-type').value;
+            const funnel = document.getElementById('content-funnel').value;
             const date = document.getElementById('content-date').value;
             const time = document.getElementById('content-time').value;
             
@@ -1078,6 +1221,7 @@
                 description,
                 platform,
                 type,
+                funnel,
                 date,
                 time
             };
@@ -1161,7 +1305,7 @@
                     
                     if (slot) {
                         const contentElement = document.createElement('div');
-                        contentElement.className = `content-item platform-${item.platform} type-${item.type}`;
+                        contentElement.className = `content-item platform-${item.platform} type-${item.type} funnel-${item.funnel}`;
                         contentElement.style.top = `${top}px`;
                         contentElement.style.height = `${height}px`;
                         contentElement.style.width = 'calc(100% - 10px)';
@@ -1170,7 +1314,7 @@
                         
                         contentElement.innerHTML = `
                             <div class="content-title">${item.title}</div>
-                            <div class="content-details">${item.platform} • ${item.type}</div>
+                            <div class="content-details">${item.platform} • ${item.type} • ${item.funnel}</div>
                         `;
                         
                         contentElement.addEventListener('click', (e) => {
@@ -1208,7 +1352,7 @@
                 .sort((a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time))
                 .forEach(item => {
                     const previewItem = document.createElement('div');
-                    previewItem.className = `preview-item platform-${item.platform} type-${item.type}`;
+                    previewItem.className = `preview-item platform-${item.platform} type-${item.type} funnel-${item.funnel}`;
                     
                     const date = new Date(item.date);
                     const formattedDate = date.toLocaleDateString('en-US', { 
@@ -1223,6 +1367,7 @@
                             <div>
                                 <span class="preview-platform platform-${item.platform}">${item.platform}</span>
                                 <span class="preview-type type-${item.type}">${item.type}</span>
+                                <span class="preview-funnel funnel-${item.funnel}">${item.funnel}</span>
                             </div>
                         </div>
                         <div class="preview-title">${item.title}</div>
@@ -1237,14 +1382,16 @@
                 });
         }
 
-        // Filter content based on selected platform and type
+        // Filter content based on selected platform, type, and funnel
         function filterItems() {
             const platformFilter = document.getElementById('platform-filter').value;
             const typeFilter = document.getElementById('type-filter').value;
+            const funnelFilter = document.getElementById('funnel-filter').value;
             
             return contentItems.filter(item => {
                 return (platformFilter === 'all' || item.platform === platformFilter) &&
-                       (typeFilter === 'all' || item.type === typeFilter);
+                       (typeFilter === 'all' || item.type === typeFilter) &&
+                       (funnelFilter === 'all' || item.funnel === funnelFilter);
             });
         }
 
