@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#5a6b8c">
+    <meta name="description" content="Tempest Content Calendar - Plan and manage your social media content with complete privacy">
+    <title>Tempest Content Calendar - Your Private Content Planning Solution</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%);
+            color: #4a4a4a;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            border-bottom: 2px solid rgba(139, 157, 184, 0.3);
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: #5a6b8c;
+            font-weight: 600;
+            font-size: 28px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            font-size: 24px;
+            color: #7b9acc;
+        }
+
+        .cta-button {
+            background: linear-gradient(to right, #7b9acc, #8fb0d9);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(to right, #6a88b5, #7b9acc);
+            box-shadow: 0 4px 12px rgba(107, 142, 193, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .hero h2 {
+            font-size: 36px;
+            color: #5a6b8c;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: #7b8ba9;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            color: #7b9acc;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #5a6b8c;
+            margin-bottom: 15px;
+        }
+
+        .privacy-section {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .privacy-section h2 {
+            color: #5a6b8c;
+            margin-bottom: 20px;
+        }
+
+        .privacy-section p {
+            max-width: 800px;
+            margin: 0 auto 20px;
+            color: #7b8ba9;
+        }
+
+        .platforms {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .platform-tag {
+            background: rgba(139, 157, 184, 0.15);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .demo-section {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .demo-image {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+
+        footer {
+            padding: 30px 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 40px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: #5a6b8c;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #8fb0d9;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .hero h2 {
+                font-size: 28px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calendar-alt logo"></i> Tempest Content Calendar</h1>
+            <a href="index.html" class="cta-button">
+                <i class="fas fa-rocket"></i> Try the App Now
+            </a>
+        </header>
+
+        <section class="hero">
+            <h2>Plan Your Content. Keep Your Privacy.</h2>
+            <p>Tempest Content Calendar is a powerful yet private tool for planning and managing your social media content. Everything stays on your device - we don't track you or collect your data.</p>
+            <a href="index.html" class="cta-button">
+                <i class="fas fa-calendar-plus"></i> Start Planning Now
+            </a>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3>Local Storage Only</h3>
+                <p>All your content plans are stored locally on your device. We don't have servers collecting your data - your plans remain private and secure.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <h3>PDF Export</h3>
+                <p>Easily export your content calendar as PDF to share with your team, clients, or for your own records. Professional reports with just one click.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <h3>Multi-Platform Support</h3>
+                <p>Plan content for all major platforms including Instagram, Facebook, Twitter, LinkedIn, YouTube, TikTok, and many more.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-filter"></i>
+                </div>
+                <h3>Smart Filtering</h3>
+                <p>Filter your content by platform, content type, or marketing funnel stage to focus on what matters most.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-drag-drop"></i>
+                </div>
+                <h3>Drag & Drop Editing</h3>
+                <p>Easily reschedule content by dragging items across your calendar. Intuitive interface makes planning effortless.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3>Content Preview</h3>
+                <p>See all your scheduled content in a clean list view with details about platform, type, and marketing funnel stage.</p>
+            </div>
+        </section>
+
+        <section class="privacy-section">
+            <h2>Your Privacy is Our Priority</h2>
+            <p>We believe your content plans should be yours alone. Tempest Content Calendar operates entirely on your device with no tracking, no analytics, and no data collection.</p>
+            <p><strong>We don't want anything from you - not even your email address.</strong></p>
+            <p>Your content calendar remains private, secure, and accessible only to you.</p>
+        </section>
+
+        <section class="demo-section">
+            <h2>All Your Platforms in One Place</h2>
+            <p>Tempest supports content planning for over 30 platforms:</p>
+            
+            <div class="platforms">
+                <span class="platform-tag"><i class="fab fa-instagram"></i> Instagram</span>
+                <span class="platform-tag"><i class="fab fa-facebook"></i> Facebook</span>
+                <span class="platform-tag"><i class="fab fa-twitter"></i> Twitter</span>
+                <span class="platform-tag"><i class="fab fa-linkedin"></i> LinkedIn</span>
+                <span class="platform-tag"><i class="fab fa-youtube"></i> YouTube</span>
+                <span class="platform-tag"><i class="fab fa-tiktok"></i> TikTok</span>
+                <span class="platform-tag"><i class="fab fa-pinterest"></i> Pinterest</span>
+                <span class="platform-tag"><i class="fab fa-reddit"></i> Reddit</span>
+                <span class="platform-tag"><i class="fab fa-discord"></i> Discord</span>
+                <span class="platform-tag"><i class="fab fa-twitch"></i> Twitch</span>
+                <span class="platform-tag"><i class="fab fa-spotify"></i> Spotify</span>
+                <span class="platform-tag">+20 more</span>
+            </div>
+        </section>
+
+        <section class="demo-section">
+            <h2>Ready to Get Started?</h2>
+            <p>Try Tempest Content Calendar today - no signup required, no data collection, just pure content planning power.</p>
+            <a href="index.html" class="cta-button">
+                <i class="fas fa-calendar-alt"></i> Launch Content Calendar
+            </a>
+        </section>
+
+        <footer>
+            <div class="footer-links">
+                <a href="https://tempestlabs.space" target="_blank">
+                    <i class="fas fa-globe"></i> Visit Our Website
+                </a>
+                <a href="https://buymeacoffee.com/ilkecandan?new=1" target="_blank">
+                    <i class="fas fa-coffee"></i> Support Us
+                </a>
+            </div>
+            <div class="app-version">Tempest Content Calendar v2.0.0</div>
+        </footer>
+    </div>
+</body>
+</html>
